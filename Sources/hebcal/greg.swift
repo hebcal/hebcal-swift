@@ -7,26 +7,13 @@
 
 import Foundation
 
-let JAN = 1
 let FEB = 2
-let MAR = 3
-let APR = 4
-let MAY = 5
-let JUN = 6
-let JUL = 7
-let AUG = 8
-let SEP = 9
-let OCT = 10
-let NOV = 11
 let DEC = 12
 
-let SUN = 0
-let MON = 1
-let TUE = 2
-let WED = 3
-let THU = 4
-let FRI = 5
-let SAT = 6
+let monthLengths = [
+    [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+    [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+]
 
 func isGregLeapYear(year: Int) -> Bool {
     return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
@@ -39,9 +26,9 @@ func isGregLeapYear(year: Int) -> Bool {
  */
 func dayOfYear(date: SimpleDate) -> Int {
     var days = date.dd + 31 * (date.mm - 1)
-    if (date.mm > FEB) {
+    if date.mm > FEB {
         days -= (4 * date.mm + 23) / 10
-        if (isGregLeapYear(year: date.yy)) {
+        if isGregLeapYear(year: date.yy) {
             days = days + 1
         }
     }
@@ -62,12 +49,6 @@ func greg2abs(date: SimpleDate) -> Int64 {
             (year / 400))  /* + Gregorian leap years */
 }
 
-
-let monthLengths = [
-    [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-    [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-]
-
 /*
  * See the footnote on page 384 of ``Calendrical Calculations, Part II:
  * Three Historical Calendars'' by E. M. Reingold,  N. Dershowitz, and S. M.
@@ -87,8 +68,8 @@ func abs2greg(absdate: Int64) -> SimpleDate {
     var day = Int((d3 % 365) + 1)
     var year = Int(400 * n400 + 100 * n100 + 4 * n4 + n1)
     
-    if (4 == n100 || 4 == n1) {
-        return SimpleDate(yy: year, mm: 12, dd: 31)
+    if 4 == n100 || 4 == n1 {
+        return SimpleDate(yy: year, mm: DEC, dd: 31)
     } else {
         year = year + 1
         var month = 1

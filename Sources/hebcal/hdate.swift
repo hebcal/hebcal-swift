@@ -7,19 +7,10 @@
 
 import Foundation
 
-let NISAN = 1
-let IYYAR = 2
-let SIVAN = 3
-let TAMUZ = 4
-let AV = 5
-let ELUL = 6
-let TISHREI = 7
-let CHESHVAN = 8
-let KISLEV = 9
-let TEVET = 10
-let SHVAT = 11
-let ADAR_I = 12
-let ADAR_II = 13
+enum HebrewMonth: Int {
+    case NISAN = 1, IYYAR, SIVAN, TAMUZ, AV, ELUL,
+         TISHREI, CHESHVAN, KISLEV, TEVET, SHVAT, ADAR_I, ADAR_II
+}
 
 let EPOCH: Int64 = -1373428
 
@@ -71,13 +62,13 @@ func elapsedDays(year: Int) -> Int64 {
     
     var altDay = day
     
-    if ((parts >= 19440) ||
+    if (parts >= 19440) ||
             ((2 == (day % 7)) && (parts >= 9924) && !(isLeapYear(year: year))) ||
-            ((1 == (day % 7)) && (parts >= 16789) && isLeapYear(year: prevYear))) {
+            ((1 == (day % 7)) && (parts >= 16789) && isLeapYear(year: prevYear)) {
         altDay = day + 1
     }
     
-    if (altDay % 7 == 0 || altDay % 7 == 3 || altDay % 7 == 5) {
+    if altDay % 7 == 0 || altDay % 7 == 3 || altDay % 7 == 5 {
         return altDay + 1
     } else {
         return altDay
@@ -117,34 +108,34 @@ func shortKislev(year: Int) -> Bool {
  * @param {number} year Hebrew year
  * @return {number}
  */
-func daysInMonth(month: Int, year: Int) -> Int {
-    if (month == IYYAR ||
-            month == TAMUZ ||
-            month == ELUL ||
-            month == TEVET ||
-            month == ADAR_II ||
-            (month == ADAR_I && !isLeapYear(year: year)) ||
-            (month == CHESHVAN && !longCheshvan(year: year)) ||
-            (month == KISLEV && shortKislev(year: year))) {
+func daysInMonth(month: HebrewMonth, year: Int) -> Int {
+    switch month {
+    case .IYYAR, .TAMUZ, .ELUL, .TEVET, .ADAR_II:
         return 29
-    } else {
+    case .ADAR_I:
+        return isLeapYear(year: year) ? 30 : 29
+    case .CHESHVAN:
+        return longCheshvan(year: year) ? 30: 29
+    case .KISLEV:
+        return shortKislev(year: year) ? 29 : 30
+    default:
         return 30
     }
 }
 
-func hebrew2abs(year: Int, month: Int, day: Int) -> Int64 {
+func hebrew2abs(year: Int, month: HebrewMonth, day: Int) -> Int64 {
     var tempabs: Int64 = Int64(day)
-    
-    if (month < TISHREI) {
-        for m in (TISHREI...monthsInYear(year: year)) {
-            tempabs += Int64(daysInMonth(month: m, year: year))
+    let imonth: Int = month.rawValue
+    if imonth < HebrewMonth.TISHREI.rawValue {
+        for m in HebrewMonth.TISHREI.rawValue...monthsInYear(year: year) {
+            tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
         }
-        for m in (NISAN..<month) {
-            tempabs += Int64(daysInMonth(month: m, year: year))
+        for m in HebrewMonth.NISAN.rawValue..<imonth {
+            tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
         }
     } else {
-        for m in (TISHREI..<month) {
-            tempabs += Int64(daysInMonth(month: m, year: year))
+        for m in HebrewMonth.TISHREI.rawValue..<imonth {
+            tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
         }
     }
     return EPOCH + elapsedDays(year: year) + tempabs - 1
@@ -153,7 +144,7 @@ func hebrew2abs(year: Int, month: Int, day: Int) -> Int64 {
 func newYearDelay(year: Int) -> Int {
     let ny1 = elapsedDays(year: year)
     let ny2 = elapsedDays(year: year + 1)
-    if (ny2 - ny1 == 356) {
+    if ny2 - ny1 == 356 {
         return 2
     } else {
         let ny0 = elapsedDays(year: year - 1)
@@ -180,13 +171,13 @@ func abs2hebrew(abs: Int64) -> SimpleDate {
     }
     year = year - 1
     
-    var month = abs < hebrew2abs(year: year, month: 1, day: 1) ? 7 : 1
+    var month = abs < hebrew2abs(year: year, month: HebrewMonth.NISAN, day: 1) ? HebrewMonth.TISHREI : HebrewMonth.NISAN
     while (abs > hebrew2abs(year: year, month: month, day: daysInMonth(month: month, year: year))) {
-        month = month + 1
+        month = HebrewMonth(rawValue: month.rawValue + 1)!
     }
     
     let day = Int(1 + abs - hebrew2abs(year: year, month: month, day: 1))
-    return SimpleDate(yy: year, mm: month, dd: day);
+    return SimpleDate(yy: year, mm: month.rawValue, dd: day);
 }
 
 /**
@@ -198,6 +189,6 @@ func abs2hebrew(abs: Int64) -> SimpleDate {
  * @param {number} absdate
  * @return {number}
  */
-func dayOnOrBefore(dayOfWeek: Int, absdate: Int64) -> Int64 {
-    return absdate - ((absdate - Int64(dayOfWeek)) % 7)
+func dayOnOrBefore(dayOfWeek: DayOfWeek, absdate: Int64) -> Int64 {
+    return absdate - ((absdate - Int64(dayOfWeek.rawValue)) % 7)
 }

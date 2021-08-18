@@ -12,3 +12,7 @@ struct SimpleDate {
     var mm: Int
     var dd: Int
 }
+
+enum DayOfWeek: Int {
+    case SUN = 0, MON, TUE, WED, THU, FRI, SAT
+}

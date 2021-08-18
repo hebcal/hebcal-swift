@@ -7,9 +7,9 @@
 
 import Foundation
 
-let INCOMPLETE = 0
-let REGULAR = 1
-let COMPLETE = 2
+enum YearType: Int {
+    case INCOMPLETE = 0, REGULAR, COMPLETE
+}
 
 let parshiot = [
     "Bereshit",
@@ -84,7 +84,13 @@ let parshiot = [
  let SHAVUOT = "Shavuot" // 33
  */
 
+/* parsha doubler */
 func D(n: Int) -> Int {
+    return -n
+}
+
+/* parsha undoubler */
+func U(n: Int) -> Int {
     return -n
 }
 
@@ -165,29 +171,29 @@ let Thu_long_leap = [
     17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, -1, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
     43, 44, 45, 46, 47, 48, 49, D(n: 50) ]
 
-func getSedraArray(leap: Bool, rhDay: Int, yearType: Int, il: Bool) -> [Int] {
-    if (!leap) {
-        switch (rhDay) {
-        case SAT:
-            if (yearType == INCOMPLETE) {
+func getSedraArray(leap: Bool, rhDay: DayOfWeek, yearType: YearType, il: Bool) -> [Int] {
+    if !leap {
+        switch rhDay {
+        case .SAT:
+            if yearType == .INCOMPLETE {
                 return Sat_short
-            } else if (yearType == COMPLETE) {
+            } else if yearType == .COMPLETE {
                 return Sat_long
             }
-        case MON:
-            if (yearType == INCOMPLETE) {
+        case .MON:
+            if yearType == .INCOMPLETE {
                 return Mon_short
-            } else if (yearType == COMPLETE) {
+            } else if yearType == .COMPLETE {
                 return il ? Mon_short : Mon_long
             }
-        case TUE:
-            if (yearType == REGULAR) {
+        case .TUE:
+            if yearType == .REGULAR {
                 return il ? Mon_short : Mon_long
             }
-        case THU:
-            if (yearType == REGULAR) {
+        case .THU:
+            if yearType == .REGULAR {
                 return il ? Thu_normal_Israel : Thu_normal
-            } else if (yearType == COMPLETE) {
+            } else if yearType == .COMPLETE {
                 return Thu_long
             }
         default:
@@ -195,27 +201,27 @@ func getSedraArray(leap: Bool, rhDay: Int, yearType: Int, il: Bool) -> [Int] {
         }
     } else {
         /* leap year */
-        switch (rhDay) {
-        case SAT:
-            if (yearType == INCOMPLETE) {
+        switch rhDay {
+        case .SAT:
+            if yearType == .INCOMPLETE {
                 return Sat_short_leap
-            } else if (yearType == COMPLETE) {
+            } else if yearType == .COMPLETE {
                 return il ? Sat_short_leap : Sat_long_leap
             }
-        case MON:
-            if (yearType == INCOMPLETE) {
+        case .MON:
+            if yearType == .INCOMPLETE {
                 return il ? Mon_short_leap_Israel : Mon_short_leap
-            } else if (yearType == COMPLETE) {
+            } else if yearType == .COMPLETE {
                 return il ? Mon_long_leap_Israel : Mon_long_leap
             }
-        case TUE:
-            if (yearType == REGULAR) {
+        case .TUE:
+            if yearType == .REGULAR {
                 return il ? Mon_long_leap_Israel : Mon_long_leap
             }
-        case THU:
-            if (yearType == INCOMPLETE) {
+        case .THU:
+            if yearType == .INCOMPLETE {
                 return Thu_short_leap
-            } else if (yearType == COMPLETE) {
+            } else if yearType == .COMPLETE {
                 return Thu_long_leap
             }
         default:
@@ -236,13 +242,33 @@ class Sedra {
         self.il = il
         let longC = longCheshvan(year: year)
         let shortK = shortKislev(year: year)
-        let yearType = (longC && !shortK) ? COMPLETE :
-            (!longC && shortK) ? INCOMPLETE :
-            REGULAR
-        let rh = hebrew2abs(year: year, month: TISHREI, day: 1)
-        let rhDay = Int(rh % 7)
-        firstSaturday = dayOnOrBefore(dayOfWeek: 6, absdate: rh + 6)
+        let yearType:YearType = (longC && !shortK) ? .COMPLETE :
+            (!longC && shortK) ? .INCOMPLETE :
+            .REGULAR
+        let rh = hebrew2abs(year: year, month: HebrewMonth.TISHREI, day: 1)
+        let rhDay:DayOfWeek = DayOfWeek(rawValue: Int(rh % 7))!
+        firstSaturday = dayOnOrBefore(dayOfWeek: DayOfWeek.SAT, absdate: rh + 6)
         let leap = isLeapYear(year: year)
         theSedraArray = getSedraArray(leap: leap, rhDay: rhDay, yearType: yearType, il: il)
+    }
+
+    func lookup(absdate: Int64) -> String? {
+        let abs = dayOnOrBefore(dayOfWeek: DayOfWeek.SAT, absdate: absdate + 6)
+        let weekNum = Int((abs - self.firstSaturday) / 7)
+        if weekNum >= self.theSedraArray.count {
+            let nextYear = Sedra(year: self.year + 1, il: self.il)
+            return nextYear.lookup(absdate: absdate)
+        }
+        let index = self.theSedraArray[weekNum]
+        if index >= 0 {
+            return parshiot[index]
+        } else if index == -1 {
+            return nil
+        } else {
+            // undouble
+            let p1 = U(n: index)
+            let p2 = p1 + 1
+            return parshiot[p1] + "-" + parshiot[p2]
+        }
     }
 }
