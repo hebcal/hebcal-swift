@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HebrewMonth: Int {
+public enum HebrewMonth: Int {
     case NISAN = 1, IYYAR, SIVAN, TAMUZ, AV, ELUL,
          TISHREI, CHESHVAN, KISLEV, TEVET, SHVAT, ADAR_I, ADAR_II
 }
@@ -19,7 +19,7 @@ let EPOCH: Int64 = -1373428
  * @param {number} year Hebrew year
  * @return {boolean}
  */
-func isLeapYear(year: Int) -> Bool {
+public func isLeapYear(year: Int) -> Bool {
     return (1 + year * 7) % 19 < 7
 }
 
@@ -28,7 +28,7 @@ func isLeapYear(year: Int) -> Bool {
  * @param {number} year Hebrew year
  * @return {number}
  */
-func monthsInYear(year: Int) -> Int {
+public func monthsInYear(year: Int) -> Int {
     let extra = isLeapYear(year: year) ? 1 : 0
     return 12 + extra
 }
@@ -80,7 +80,7 @@ func elapsedDays(year: Int) -> Int64 {
  * @param {number} year Hebrew year
  * @return {number}
  */
-func daysInYear(year: Int) -> Int {
+public func daysInYear(year: Int) -> Int {
     return Int(elapsedDays(year: year + 1) - elapsedDays(year: year))
 }
 
@@ -89,7 +89,7 @@ func daysInYear(year: Int) -> Int {
  * @param {number} year Hebrew year
  * @return {boolean}
  */
-func longCheshvan(year: Int) -> Bool {
+public func longCheshvan(year: Int) -> Bool {
     return daysInYear(year: year) % 10 == 5
 }
 
@@ -98,7 +98,7 @@ func longCheshvan(year: Int) -> Bool {
  * @param {number} year Hebrew year
  * @return {boolean}
  */
-func shortKislev(year: Int) -> Bool {
+public func shortKislev(year: Int) -> Bool {
     return daysInYear(year: year) % 10 == 3
 }
 
@@ -108,7 +108,7 @@ func shortKislev(year: Int) -> Bool {
  * @param {number} year Hebrew year
  * @return {number}
  */
-func daysInMonth(month: HebrewMonth, year: Int) -> Int {
+public func daysInMonth(month: HebrewMonth, year: Int) -> Int {
     switch month {
     case .IYYAR, .TAMUZ, .ELUL, .TEVET, .ADAR_II:
         return 29
@@ -123,7 +123,7 @@ func daysInMonth(month: HebrewMonth, year: Int) -> Int {
     }
 }
 
-func hebrew2abs(year: Int, month: HebrewMonth, day: Int) -> Int64 {
+public func hebrew2abs(year: Int, month: HebrewMonth, day: Int) -> Int64 {
     var tempabs: Int64 = Int64(day)
     let imonth: Int = month.rawValue
     if imonth < HebrewMonth.TISHREI.rawValue {
@@ -158,11 +158,10 @@ func newYear(year: Int) -> Int64 {
 
 /**
  * Converts absolute R.D. days to Hebrew date
- * @private
  * @param {number} abs absolute R.D. days
  * @return {SimpleHebrewDate}
  */
-func abs2hebrew(abs: Int64) -> SimpleDate {
+public func abs2hebrew(abs: Int64) -> SimpleDate {
     let approx = 1 + Int(Double(abs - EPOCH) / 365.24682220597794)
     
     var year = approx - 1
@@ -189,6 +188,6 @@ func abs2hebrew(abs: Int64) -> SimpleDate {
  * @param {number} absdate
  * @return {number}
  */
-func dayOnOrBefore(dayOfWeek: DayOfWeek, absdate: Int64) -> Int64 {
+public func dayOnOrBefore(dayOfWeek: DayOfWeek, absdate: Int64) -> Int64 {
     return absdate - ((absdate - Int64(dayOfWeek.rawValue)) % 7)
 }

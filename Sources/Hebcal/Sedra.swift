@@ -11,7 +11,7 @@ enum YearType: Int {
     case INCOMPLETE = 0, REGULAR, COMPLETE
 }
 
-let parshiot = [
+public let parshiot = [
     "Bereshit",
     "Noach",
     "Lech-Lecha",
@@ -231,7 +231,7 @@ func getSedraArray(leap: Bool, rhDay: DayOfWeek, yearType: YearType, il: Bool) -
     return []
 }
 
-class Sedra {
+public class Sedra {
     let year: Int
     let il: Bool
     let firstSaturday: Int64

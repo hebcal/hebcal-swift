@@ -15,7 +15,7 @@ let monthLengths = [
     [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
 ]
 
-func isGregLeapYear(year: Int) -> Bool {
+public func isGregLeapYear(year: Int) -> Bool {
     return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
 }
 
@@ -24,7 +24,7 @@ func isGregLeapYear(year: Int) -> Bool {
  * For example, dayOfYear({1,1,1987}) returns the value 1
  * while dayOfYear({12,31,1980}) returns 366.
  */
-func dayOfYear(date: SimpleDate) -> Int {
+public func dayOfYear(date: SimpleDate) -> Int {
     var days = date.dd + 31 * (date.mm - 1)
     if date.mm > FEB {
         days -= (4 * date.mm + 23) / 10
@@ -39,7 +39,7 @@ func dayOfYear(date: SimpleDate) -> Int {
  * The number of days elapsed between the Gregorian date 12/31/1 BC and DATE.
  * The Gregorian date Sunday, December 31, 1 BC is imaginary.
  */
-func greg2abs(date: SimpleDate) -> Int64 {
+public func greg2abs(date: SimpleDate) -> Int64 {
     let year = Int64(date.yy - 1)
     let days = Int64(dayOfYear(date: date))
     return days +   /* days this year */
@@ -55,7 +55,7 @@ func greg2abs(date: SimpleDate) -> Int64 {
  * Clamen, Software--Practice and Experience, Volume 23, Number 4
  * (April, 1993), pages 383-404 for an explanation.
  */
-func abs2greg(absdate: Int64) -> SimpleDate {
+public func abs2greg(absdate: Int64) -> SimpleDate {
     let d0 = absdate - 1
     let n400 = d0 / 146097
     let d1 = d0 % 146097
