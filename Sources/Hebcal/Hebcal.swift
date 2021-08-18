@@ -1,3 +1,3 @@
-struct hebcal {
+struct Hebcal {
     var text = "Hello, World!"
 }

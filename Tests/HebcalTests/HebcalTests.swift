@@ -1,11 +1,11 @@
     import XCTest
-    @testable import hebcal
+    @testable import Hebcal
 
-    final class hebcalTests: XCTestCase {
+    final class HebcalTests: XCTestCase {
         func testExample() {
             // This is an example of a functional test case.
             // Use XCTAssert and related functions to verify your tests produce the correct
             // results.
-            XCTAssertEqual(hebcal().text, "Hello, World!")
+            XCTAssertEqual(Hebcal().text, "Hello, World!")
         }
     }
