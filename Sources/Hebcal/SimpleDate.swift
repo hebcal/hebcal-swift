@@ -11,6 +11,11 @@ public struct SimpleDate {
     var yy: Int
     var mm: Int
     var dd: Int
+    public init(yy: Int, mm: Int, dd: Int) {
+        self.yy = yy
+        self.mm = mm
+        self.dd = dd
+    }
 }
 
 public enum DayOfWeek: Int {
