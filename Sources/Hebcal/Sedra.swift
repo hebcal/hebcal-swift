@@ -237,7 +237,7 @@ public class Sedra {
     let firstSaturday: Int64
     let theSedraArray: [Int]
     
-    init(year: Int, il: Bool) {
+    public init(year: Int, il: Bool) {
         self.year = year
         self.il = il
         let longC = longCheshvan(year: year)
@@ -252,7 +252,7 @@ public class Sedra {
         theSedraArray = getSedraArray(leap: leap, rhDay: rhDay, yearType: yearType, il: il)
     }
 
-    func lookup(absdate: Int64) -> String? {
+    public func lookup(absdate: Int64) -> String? {
         let abs = dayOnOrBefore(dayOfWeek: DayOfWeek.SAT, absdate: absdate + 6)
         let weekNum = Int((abs - self.firstSaturday) / 7)
         if weekNum >= self.theSedraArray.count {
