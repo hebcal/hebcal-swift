@@ -12,6 +12,10 @@ public enum HebrewMonth: Int {
          TISHREI, CHESHVAN, KISLEV, TEVET, SHVAT, ADAR_I, ADAR_II
 }
 
+public enum DayOfWeek: Int {
+    case SUN = 0, MON, TUE, WED, THU, FRI, SAT
+}
+
 let EPOCH: Int64 = -1373428
 
 /**
@@ -156,27 +160,50 @@ func newYear(year: Int) -> Int64 {
     return EPOCH + elapsedDays(year: year) + Int64(newYearDelay(year: year))
 }
 
-/**
- * Converts absolute R.D. days to Hebrew date
- * @param {number} abs absolute R.D. days
- * @return {SimpleHebrewDate}
- */
-public func abs2hebrew(abs: Int64) -> SimpleDate {
-    let approx = 1 + Int(Double(abs - EPOCH) / 365.24682220597794)
-    
-    var year = approx - 1
-    while (newYear(year: year) <= abs) {
-        year = year + 1
+public struct HDate {
+    var yy: Int
+    var mm: HebrewMonth
+    var dd: Int
+
+    public init(yy: Int, mm: HebrewMonth, dd: Int) {
+        self.yy = yy
+        self.mm = mm
+        self.dd = dd
     }
-    year = year - 1
-    
-    var month = abs < hebrew2abs(year: year, month: HebrewMonth.NISAN, day: 1) ? HebrewMonth.TISHREI : HebrewMonth.NISAN
-    while (abs > hebrew2abs(year: year, month: month, day: daysInMonth(month: month, year: year))) {
-        month = HebrewMonth(rawValue: month.rawValue + 1)!
+
+    public init(date: Date) {
+        self.init(absdate: greg2abs(date: date))
     }
-    
-    let day = Int(1 + abs - hebrew2abs(year: year, month: month, day: 1))
-    return SimpleDate(yy: year, mm: month.rawValue, dd: day);
+
+    public init(absdate: Int64) {
+        let approx = 1 + Int(Double(absdate - EPOCH) / 365.24682220597794)
+        var year = approx - 1
+        while (newYear(year: year) <= absdate) {
+            year = year + 1
+        }
+        year = year - 1
+        var month = absdate < hebrew2abs(year: year, month: HebrewMonth.NISAN, day: 1) ? HebrewMonth.TISHREI : HebrewMonth.NISAN
+        while (absdate > hebrew2abs(year: year, month: month, day: daysInMonth(month: month, year: year))) {
+            month = HebrewMonth(rawValue: month.rawValue + 1)!
+        }
+        let day = Int(1 + absdate - hebrew2abs(year: year, month: month, day: 1))
+        self.yy = year
+        self.mm = month
+        self.dd = day
+    }
+
+    public func abs() -> Int64 {
+        return hebrew2abs(year: self.yy, month: self.mm, day: self.dd)
+    }
+
+    public func greg() -> Date {
+        return abs2greg(absdate: self.abs())
+    }
+
+    public func dow() -> DayOfWeek {
+        let day = Int(self.abs() % 7)
+        return DayOfWeek(rawValue: day)!
+    }
 }
 
 /**

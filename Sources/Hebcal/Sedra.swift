@@ -271,4 +271,8 @@ public class Sedra {
             return parshiot[p1] + "-" + parshiot[p2]
         }
     }
+
+    public func lookup(hdate: HDate) -> String? {
+        return self.lookup(absdate: hdate.abs())
+    }
 }
