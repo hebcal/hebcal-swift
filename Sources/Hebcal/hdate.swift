@@ -161,9 +161,9 @@ func newYear(year: Int) -> Int64 {
 }
 
 public struct HDate {
-    var yy: Int
-    var mm: HebrewMonth
-    var dd: Int
+    public let yy: Int
+    public let mm: HebrewMonth
+    public let dd: Int
 
     public init(yy: Int, mm: HebrewMonth, dd: Int) {
         self.yy = yy
