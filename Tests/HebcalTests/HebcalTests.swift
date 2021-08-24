@@ -3,9 +3,11 @@
 
     final class HebcalTests: XCTestCase {
         func testExample() {
-            // This is an example of a functional test case.
-            // Use XCTAssert and related functions to verify your tests produce the correct
-            // results.
-            XCTAssertEqual(Hebcal().text, "Hello, World!")
+            XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.en), "Noach")
+            XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.ashkenazi), "Noach")
+            XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.he), "נֹחַ")
+            XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.en), "Bechukotai")
+            XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.ashkenazi), "Bechukosai")
+            XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.he), "בְּחֻקֹּתַי")
         }
     }

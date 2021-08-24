@@ -252,27 +252,29 @@ public class Sedra {
         theSedraArray = getSedraArray(leap: leap, rhDay: rhDay, yearType: yearType, il: il)
     }
 
-    public func lookup(absdate: Int64) -> String? {
+    public func lookup(absdate: Int64, lang: TranslationLang) -> String? {
         let abs = dayOnOrBefore(dayOfWeek: DayOfWeek.SAT, absdate: absdate + 6)
         let weekNum = Int((abs - self.firstSaturday) / 7)
         if weekNum >= self.theSedraArray.count {
             let nextYear = Sedra(year: self.year + 1, il: self.il)
-            return nextYear.lookup(absdate: absdate)
+            return nextYear.lookup(absdate: absdate, lang: lang)
         }
         let index = self.theSedraArray[weekNum]
         if index >= 0 {
-            return parshiot[index]
+            let parshaName = parshiot[index]
+            return lookupTranslation(str: parshaName, lang: lang)
         } else if index == -1 {
             return nil
         } else {
             // undouble
             let p1 = U(n: index)
             let p2 = p1 + 1
-            return parshiot[p1] + "-" + parshiot[p2]
+            return lookupTranslation(str: parshiot[p1], lang: lang) +
+                lookupTranslation(str: "-", lang: lang) + lookupTranslation(str: parshiot[p2], lang: lang)
         }
     }
 
-    public func lookup(hdate: HDate) -> String? {
-        return self.lookup(absdate: hdate.abs())
+    public func lookup(hdate: HDate, lang: TranslationLang) -> String? {
+        return self.lookup(absdate: hdate.abs(), lang: lang)
     }
 }
