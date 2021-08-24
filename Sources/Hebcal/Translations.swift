@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum TranslationLang: Int {
+public enum TranslationLang: Int, CaseIterable, Codable {
     case en = 0, ashkenazi = 1, he = 2
 }
 

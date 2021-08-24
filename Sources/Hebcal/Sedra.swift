@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum YearType: Int {
+enum YearType: Int, CaseIterable, Codable {
     case INCOMPLETE = 0, REGULAR, COMPLETE
 }
 

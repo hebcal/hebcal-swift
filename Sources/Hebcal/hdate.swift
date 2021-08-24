@@ -7,12 +7,12 @@
 
 import Foundation
 
-public enum HebrewMonth: Int {
+public enum HebrewMonth: Int, CaseIterable, Codable {
     case NISAN = 1, IYYAR, SIVAN, TAMUZ, AV, ELUL,
          TISHREI, CHESHVAN, KISLEV, TEVET, SHVAT, ADAR_I, ADAR_II
 }
 
-public enum DayOfWeek: Int {
+public enum DayOfWeek: Int, CaseIterable, Codable {
     case SUN = 0, MON, TUE, WED, THU, FRI, SAT
 }
 
