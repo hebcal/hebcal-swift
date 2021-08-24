@@ -204,6 +204,26 @@ public struct HDate {
         let day = Int(self.abs() % 7)
         return DayOfWeek(rawValue: day)!
     }
+
+    public func monthName() -> String {
+        switch self.mm {
+        case .NISAN: return "Nisan"
+        case .IYYAR: return "Iyyar"
+        case .SIVAN: return "Sivan"
+        case .TAMUZ: return "Tamuz"
+        case .AV: return "Av"
+        case .ELUL: return "Elul"
+        case .TISHREI: return "Tishrei"
+        case .CHESHVAN: return "Cheshvan"
+        case .KISLEV: return "Kislev"
+        case .TEVET: return "Tevet"
+        case .SHVAT: return "Sh'vat"
+        case .ADAR_I:
+            return isLeapYear(year: self.yy) ? "Adar" : "Adar I"
+        case .ADAR_II:
+            return "Adar II"
+        }
+    }
 }
 
 /**
