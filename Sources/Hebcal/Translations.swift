@@ -1,14 +1,12 @@
 //
-//  File.swift
-//  
-//
+//  Translations.swift
 //  Created by Michael Radwin on 8/23/21.
 //
 
 import Foundation
 
-public enum TranslationLang {
-    case en, ashkenazi, he
+public enum TranslationLang: Int {
+    case en = 0, ashkenazi = 1, he = 2
 }
 
 public func lookupTranslation(str: String, lang: TranslationLang) -> String {
