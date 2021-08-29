@@ -205,6 +205,14 @@ public struct HDate {
         return DayOfWeek(rawValue: day)!
     }
 
+    public func next() -> HDate {
+        return HDate(absdate: self.abs() + 1)
+    }
+
+    public func prev() -> HDate {
+        return HDate(absdate: self.abs() - 1)
+    }
+
     public func monthName() -> String {
         switch self.mm {
         case .NISAN: return "Nisan"
@@ -222,6 +230,18 @@ public struct HDate {
             return isLeapYear(year: self.yy) ? "Adar" : "Adar I"
         case .ADAR_II:
             return "Adar II"
+        }
+    }
+
+    public func render(lang: TranslationLang?) -> String {
+        let monthName = self.monthName()
+        let language = lang ?? TranslationLang.en
+        if language == .he {
+            return hebnumToString(number: self.dd) + " " +
+                lookupTranslation(str: monthName, lang: language) + " " +
+                hebnumToString(number: self.yy)
+        } else {
+            return String(self.dd) + " " + monthName + " " + String(self.yy)
         }
     }
 }
