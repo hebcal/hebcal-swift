@@ -160,14 +160,26 @@ func newYear(year: Int) -> Int64 {
     return EPOCH + elapsedDays(year: year) + Int64(newYearDelay(year: year))
 }
 
-public struct HDate {
+public struct HDate: Comparable {
+    public static func < (lhs: HDate, rhs: HDate) -> Bool {
+        if lhs.yy != rhs.yy {
+            return lhs.yy < rhs.yy
+        } else {
+            return lhs.abs() < rhs.abs()
+        }
+    }
+
+    public static func == (lhs: HDate, rhs: HDate) -> Bool {
+        return lhs.yy == rhs.yy && lhs.mm == rhs.mm && lhs.dd == rhs.dd
+    }
+
     public let yy: Int
     public let mm: HebrewMonth
     public let dd: Int
 
     public init(yy: Int, mm: HebrewMonth, dd: Int) {
         self.yy = yy
-        self.mm = mm
+        self.mm = (mm == .ADAR_II && !isLeapYear(year: yy)) ? .ADAR_I : mm
         self.dd = dd
     }
 

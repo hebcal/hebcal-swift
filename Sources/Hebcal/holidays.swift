@@ -35,7 +35,15 @@ public struct HolidayFlags: OptionSet {
     static public let CHOL_HAMOED = HolidayFlags(rawValue: 0x200000)
 }
 
-public struct HEvent {
+public struct HEvent: Comparable {
+    public static func < (lhs: HEvent, rhs: HEvent) -> Bool {
+        return lhs.hdate < rhs.hdate
+    }
+
+    public static func == (lhs: HEvent, rhs: HEvent) -> Bool {
+        return lhs.desc == rhs.desc && lhs.hdate == rhs.hdate && lhs.flags == rhs.flags
+    }
+
     public let hdate: HDate
     public let desc: String
     public let flags: HolidayFlags
@@ -62,6 +70,11 @@ struct Holiday {
         self.emoji = emoji
     }
 }
+
+let chanukahEmoji = "🕎"
+let keyCapDigits = [
+    "0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣",
+]
 
 let staticHolidays: [Holiday] = [
     Holiday(mm: .TISHREI, dd: 1, desc: "Rosh Hashana",
@@ -92,26 +105,69 @@ let staticHolidays: [Holiday] = [
     Holiday(mm: .TISHREI, dd: 22, desc: "Shmini Atzeret", flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
 
     Holiday(mm: .TISHREI, dd: 21, desc: "Sukkot VII (Hoshana Raba)", flags: [.LIGHT_CANDLES, .CHOL_HAMOED]),
+    Holiday(mm: .KISLEV, dd: 24, desc: "Chanukah: 1 Candle",
+            flags: [.EREV, .MINOR_HOLIDAY, .CHANUKAH_CANDLES],
+            emoji: chanukahEmoji + keyCapDigits[1]),
+    Holiday(mm: .TEVET, dd: 10, desc: "Asara B'Tevet", flags: .MINOR_FAST),
+    Holiday(mm: .SHVAT, dd: 15, desc: "Tu BiShvat", flags: .MINOR_HOLIDAY, emoji: "🌳"),
+    Holiday(mm: .ADAR_II, dd: 13, desc: "Erev Purim", flags: [.EREV, .MINOR_HOLIDAY], emoji: "🎭️📜"),
+    Holiday(mm: .ADAR_II, dd: 14, desc: "Purim", flags: .MINOR_HOLIDAY, emoji: "🎭️📜"),
 
 
 ]
 
-public func getHolidaysForYear(year: Int) -> [HEvent] {
+public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
     var events = [HEvent]()
-    let RH = HDate(yy: year, mm: .TISHREI, dd: 1)
-    let pesach = HDate(yy: year, mm: .NISAN, dd: 15)
     // standard holidays that don't shift based on year
     for h in staticHolidays {
+        if (il && h.flags.contains(.CHUL_ONLY)) || (!il && h.flags.contains(.IL_ONLY)) {
+            continue
+        }
         events.append(HEvent(hdate: HDate(yy: year, mm: h.mm, dd: h.dd), desc: h.desc, flags: h.flags))
     }
     // variable holidays
+    let RH = HDate(yy: year, mm: .TISHREI, dd: 1)
+    let pesach = HDate(yy: year, mm: .NISAN, dd: 15)
+    let pesachAbs = pesach.abs()
     events.append(contentsOf: [
         HEvent(hdate: HDate(yy: year, mm: .TISHREI, dd: 3 + (RH.dow() == .THU ? 1 : 0)),
                desc: "Tzom Gedaliah", flags: .MINOR_FAST),
-        HEvent(hdate: HDate(yy: year, mm: .TISHREI, dd: 9),
-               desc: "Erev Yom Kippur", flags: [.EREV, .LIGHT_CANDLES]),
-        HEvent(hdate: HDate(yy: year, mm: .TISHREI, dd: 10),
-               desc: "Yom Kippur", flags: [.CHAG, .MAJOR_FAST, .YOM_TOV_ENDS]),
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 43)),
+               desc: "Shabbat Shekalim", flags: .SPECIAL_SHABBAT),
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 30)),
+               desc: "Shabbat Zachor", flags: .SPECIAL_SHABBAT),
+        HEvent(hdate: HDate(absdate: pesachAbs - (pesach.dow() == .TUE ? 33 : 31)),
+               desc: "Ta'anit Esther", flags: .MINOR_FAST),
     ])
+
+    // chanukah
+    for i in 2...6 {
+        events.append(
+            HEvent(hdate: HDate(yy: year, mm: .KISLEV, dd: 23 + i),
+                   desc: "Chanukah: \(i) Candles",
+                   flags: [.MINOR_HOLIDAY, .CHANUKAH_CANDLES],
+                   emoji: chanukahEmoji + keyCapDigits[i])
+            )
+    }
+    let chanukah7 = shortKislev(year: year) ?
+        HDate(yy: year, mm: .TEVET, dd: 1) :
+        HDate(yy: year, mm: .KISLEV, dd: 30)
+    let chanukah8 = chanukah7.next()
+    events.append(contentsOf: [
+        HEvent(hdate: chanukah7,
+               desc: "Chanukah: 7 Candles",
+               flags: [.MINOR_HOLIDAY, .CHANUKAH_CANDLES],
+               emoji: chanukahEmoji + keyCapDigits[7]),
+        HEvent(hdate: chanukah8,
+               desc: "Chanukah: 8 Candles",
+               flags: [.MINOR_HOLIDAY, .CHANUKAH_CANDLES],
+               emoji: chanukahEmoji + keyCapDigits[8]),
+        HEvent(hdate: chanukah8.next(),
+               desc: "Chanukah: 8th Day",
+               flags: .MINOR_HOLIDAY,
+               emoji: chanukahEmoji),
+    ])
+
+    events.sort()
     return events
 }
