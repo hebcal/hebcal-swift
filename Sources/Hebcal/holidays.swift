@@ -117,7 +117,7 @@ let staticHolidays: [Holiday] = [
     Holiday(mm: .ADAR_II, dd: 13, desc: "Erev Purim", flags: [.EREV, .MINOR_HOLIDAY], emoji: "🎭️📜"),
     Holiday(mm: .ADAR_II, dd: 14, desc: "Purim", flags: .MINOR_HOLIDAY, emoji: "🎭️📜"),
     Holiday(mm: .NISAN, dd: 14, desc: "Erev Pesach", flags: [.EREV, .LIGHT_CANDLES]),
-
+    // Pesach Israel
     Holiday(mm: .NISAN, dd: 15, desc: "Pesach I",
             flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
     Holiday(mm: .NISAN, dd: 16, desc: "Pesach II (CH''M)",
@@ -132,7 +132,7 @@ let staticHolidays: [Holiday] = [
             flags: [.IL_ONLY, .CHOL_HAMOED, .LIGHT_CANDLES]),
     Holiday(mm: .NISAN, dd: 21, desc: "Pesach VII",
             flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
-
+    // Pesach chutz l'aretz
     Holiday(mm: .NISAN, dd: 15, desc: "Pesach I",
             flags: [.CHUL_ONLY, .CHAG, .LIGHT_CANDLES_TZEIS]),
     Holiday(mm: .NISAN, dd: 16, desc: "Pesach II",
@@ -175,7 +175,8 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
         if (il && h.flags.contains(.CHUL_ONLY)) || (!il && h.flags.contains(.IL_ONLY)) {
             continue
         }
-        events.append(HEvent(hdate: HDate(yy: year, mm: h.mm, dd: h.dd), desc: h.desc, flags: h.flags))
+        events.append(HEvent(hdate: HDate(yy: year, mm: h.mm, dd: h.dd),
+                             desc: h.desc, flags: h.flags, emoji: h.emoji))
     }
     // variable holidays
     let RH = HDate(yy: year, mm: .TISHREI, dd: 1)
@@ -261,24 +262,8 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: av9abs + 7)),
                desc: "Shabbat Nachamu", flags: .SPECIAL_SHABBAT),
     ])
-    // modern holidays
-    if year >= 5711 {
-        // Yom HaShoah first observed in 1951
-        var nisan27dt = HDate(yy: year, mm: .NISAN, dd: 27)
-        /* When the actual date of Yom Hashoah falls on a Friday, the
-         * state of Israel observes Yom Hashoah on the preceding
-         * Thursday. When it falls on a Sunday, Yom Hashoah is observed
-         * on the following Monday.
-         * http://www.ushmm.org/remembrance/dor/calendar/
-         */
-        if nisan27dt.dow() == .FRI {
-            nisan27dt = nisan27dt.prev()
-        } else if nisan27dt.dow() == .SUN {
-            nisan27dt = nisan27dt.next()
-        }
-        events.append(HEvent(hdate: nisan27dt, desc: "Yom HaShoah", flags: .MODERN_HOLIDAY))
-    }
 
+    // modern holidays
     if year >= 5708 {
         // Yom HaAtzma'ut only celebrated after 1948
         var day: Int
@@ -300,6 +285,43 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
         ])
     }
 
+    if year >= 5711 {
+        // Yom HaShoah first observed in 1951
+        var nisan27dt = HDate(yy: year, mm: .NISAN, dd: 27)
+        /* When the actual date of Yom Hashoah falls on a Friday, the
+         * state of Israel observes Yom Hashoah on the preceding
+         * Thursday. When it falls on a Sunday, Yom Hashoah is observed
+         * on the following Monday.
+         * http://www.ushmm.org/remembrance/dor/calendar/
+         */
+        if nisan27dt.dow() == .FRI {
+            nisan27dt = nisan27dt.prev()
+        } else if nisan27dt.dow() == .SUN {
+            nisan27dt = nisan27dt.next()
+        }
+        events.append(HEvent(hdate: nisan27dt, desc: "Yom HaShoah", flags: .MODERN_HOLIDAY))
+    }
+
+    if year >= 5727 {
+        // Yom Yerushalayim only celebrated after 1967
+        events.append(HEvent(hdate: HDate(yy: year, mm: .IYYAR, dd: 28),
+                             desc: "Yom Yerushalayim", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"))
+    }
+
+    if year >= 5769 {
+        events.append(HEvent(hdate: HDate(yy: year, mm: .CHESHVAN, dd: 29),
+                             desc: "Sigd", flags: .MODERN_HOLIDAY))
+    }
+
+    if year >= 5777 {
+        events.append(contentsOf: [
+            HEvent(hdate: HDate(yy: year, mm: .CHESHVAN, dd: 7),
+                   desc: "Yom HaAliyah School Observance", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"),
+            HEvent(hdate: HDate(yy: year, mm: .NISAN, dd: 10),
+                   desc: "Yom HaAliyah", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"),
+        ])
+    }
+
     // Rosh Chodesh
     for i in 1...monthsInYear(year: year) {
         let isNisan = i == 1
@@ -311,21 +333,32 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
         let desc = "Rosh Chodesh \(monthName)"
         if prevMonthNumDays == 30 {
             events.append(HEvent(hdate: HDate(yy: year, mm: prevMonth, dd: 30),
-                                 desc: desc, flags: .ROSH_CHODESH))
+                                 desc: desc, flags: .ROSH_CHODESH, emoji: "🌒"))
             events.append(HEvent(hdate: HDate(yy: year, mm: month, dd: 1),
-                                 desc: desc, flags: .ROSH_CHODESH))
+                                 desc: desc, flags: .ROSH_CHODESH, emoji: "🌒"))
         } else if month != .TISHREI {
             events.append(HEvent(hdate: HDate(yy: year, mm: month, dd: 1),
-                                 desc: desc, flags: .ROSH_CHODESH))
+                                 desc: desc, flags: .ROSH_CHODESH, emoji: "🌒"))
         }
     }
 
-    /*
     let sedra = Sedra(year: year, il: il)
-    let beshalachHd = sedra.find(15)
+    let beshalachHd = sedra.find(15)!
     events.append(HEvent(hdate: beshalachHd, desc: "Shabbat Shirah", flags: .SPECIAL_SHABBAT))
-    */
 
     events.sort()
     return events
+}
+
+public func getHolidaysOnDate(hdate: HDate, il: Bool) -> [HEvent] {
+    let events = getHolidaysForYear(year: hdate.yy, il: il)
+    var result = [HEvent]()
+    for ev in events {
+        if ev.hdate == hdate {
+            result.append(ev)
+        } else if ev.hdate > hdate {
+            break
+        }
+    }
+    return result
 }

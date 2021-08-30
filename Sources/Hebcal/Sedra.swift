@@ -94,6 +94,13 @@ func U(n: Int) -> Int {
     return -n
 }
 
+func isValidDouble(n: Int) -> Bool {
+    switch n {
+    case -21, -26, -28, -31, -38, -41, -50: return true
+    default: return false
+    }
+}
+
 /*
  * These indices were originally included in the emacs 19 distribution.
  * These arrays determine the correct indices into the parsha names
@@ -276,5 +283,15 @@ public class Sedra {
 
     public func lookup(hdate: HDate, lang: TranslationLang) -> String? {
         return self.lookup(absdate: hdate.abs(), lang: lang)
+    }
+
+    public func find(_ parsha: Int) -> HDate? {
+        if parsha > 53 || (parsha < 0 && !isValidDouble(n: parsha)) {
+            return nil
+        }
+        if let idx = self.theSedraArray.firstIndex(of: parsha) {
+            return HDate(absdate: self.firstSaturday + Int64(idx * 7))
+        }
+        return nil
     }
 }
