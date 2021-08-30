@@ -22,7 +22,8 @@
        }
 
         func testHolidays() {
-            let holidays = getHolidaysForYear(year: 5782)
+            let holidays = getHolidaysForYear(year: 5782, il: false)
+            print(holidays)
             XCTAssertEqual(holidays.count, 24)
         }
     }

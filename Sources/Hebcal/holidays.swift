@@ -93,18 +93,22 @@ let staticHolidays: [Holiday] = [
     Holiday(mm: .TISHREI, dd: 18, desc: "Sukkot IV (CH''M)", flags: [.CHUL_ONLY, .CHOL_HAMOED]),
     Holiday(mm: .TISHREI, dd: 19, desc: "Sukkot V (CH''M)", flags: [.CHUL_ONLY, .CHOL_HAMOED]),
     Holiday(mm: .TISHREI, dd: 20, desc: "Sukkot VI (CH''M)", flags: [.CHUL_ONLY, .CHOL_HAMOED]),
-    Holiday(mm: .TISHREI, dd: 22, desc: "Shmini Atzeret", flags: [.CHUL_ONLY, .CHAG, .LIGHT_CANDLES_TZEIS]),
-    Holiday(mm: .TISHREI, dd: 23, desc: "Simchat Torah", flags: [.CHUL_ONLY, .CHAG, .YOM_TOV_ENDS]),
+    Holiday(mm: .TISHREI, dd: 22, desc: "Shmini Atzeret",
+            flags: [.CHUL_ONLY, .CHAG, .LIGHT_CANDLES_TZEIS]),
+    Holiday(mm: .TISHREI, dd: 23, desc: "Simchat Torah",
+            flags: [.CHUL_ONLY, .CHAG, .YOM_TOV_ENDS]),
 
     Holiday(mm: .TISHREI, dd: 15, desc: "Sukkot I", flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
-    Holiday(mm: .TISHREI, dd: 16, desc: "Sukkot II (CH''M)", flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
+    Holiday(mm: .TISHREI, dd: 16, desc: "Sukkot II (CH''M)", flags: [.IL_ONLY, .CHOL_HAMOED]),
     Holiday(mm: .TISHREI, dd: 17, desc: "Sukkot III (CH''M)", flags: [.IL_ONLY, .CHOL_HAMOED]),
     Holiday(mm: .TISHREI, dd: 18, desc: "Sukkot IV (CH''M)", flags: [.IL_ONLY, .CHOL_HAMOED]),
     Holiday(mm: .TISHREI, dd: 19, desc: "Sukkot V (CH''M)", flags: [.IL_ONLY, .CHOL_HAMOED]),
     Holiday(mm: .TISHREI, dd: 20, desc: "Sukkot VI (CH''M)", flags: [.IL_ONLY, .CHOL_HAMOED]),
-    Holiday(mm: .TISHREI, dd: 22, desc: "Shmini Atzeret", flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
+    Holiday(mm: .TISHREI, dd: 22, desc: "Shmini Atzeret",
+            flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
 
-    Holiday(mm: .TISHREI, dd: 21, desc: "Sukkot VII (Hoshana Raba)", flags: [.LIGHT_CANDLES, .CHOL_HAMOED]),
+    Holiday(mm: .TISHREI, dd: 21, desc: "Sukkot VII (Hoshana Raba)",
+            flags: [.LIGHT_CANDLES, .CHOL_HAMOED]),
     Holiday(mm: .KISLEV, dd: 24, desc: "Chanukah: 1 Candle",
             flags: [.EREV, .MINOR_HOLIDAY, .CHANUKAH_CANDLES],
             emoji: chanukahEmoji + keyCapDigits[1]),
@@ -112,8 +116,56 @@ let staticHolidays: [Holiday] = [
     Holiday(mm: .SHVAT, dd: 15, desc: "Tu BiShvat", flags: .MINOR_HOLIDAY, emoji: "🌳"),
     Holiday(mm: .ADAR_II, dd: 13, desc: "Erev Purim", flags: [.EREV, .MINOR_HOLIDAY], emoji: "🎭️📜"),
     Holiday(mm: .ADAR_II, dd: 14, desc: "Purim", flags: .MINOR_HOLIDAY, emoji: "🎭️📜"),
+    Holiday(mm: .NISAN, dd: 14, desc: "Erev Pesach", flags: [.EREV, .LIGHT_CANDLES]),
 
+    Holiday(mm: .NISAN, dd: 15, desc: "Pesach I",
+            flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
+    Holiday(mm: .NISAN, dd: 16, desc: "Pesach II (CH''M)",
+            flags: [.IL_ONLY, .CHOL_HAMOED]),
+    Holiday(mm: .NISAN, dd: 17, desc: "Pesach III (CH''M)",
+            flags: [.IL_ONLY, .CHOL_HAMOED]),
+    Holiday(mm: .NISAN, dd: 18, desc: "Pesach IV (CH''M)",
+            flags: [.IL_ONLY, .CHOL_HAMOED]),
+    Holiday(mm: .NISAN, dd: 19, desc: "Pesach V (CH''M)",
+            flags: [.IL_ONLY, .CHOL_HAMOED]),
+    Holiday(mm: .NISAN, dd: 20, desc: "Pesach VI (CH''M)",
+            flags: [.IL_ONLY, .CHOL_HAMOED, .LIGHT_CANDLES]),
+    Holiday(mm: .NISAN, dd: 21, desc: "Pesach VII",
+            flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS]),
 
+    Holiday(mm: .NISAN, dd: 15, desc: "Pesach I",
+            flags: [.CHUL_ONLY, .CHAG, .LIGHT_CANDLES_TZEIS]),
+    Holiday(mm: .NISAN, dd: 16, desc: "Pesach II",
+            flags: [.CHUL_ONLY, .CHAG, .YOM_TOV_ENDS]),
+    Holiday(mm: .NISAN, dd: 17, desc: "Pesach III (CH''M)",
+            flags: [.CHUL_ONLY, .CHOL_HAMOED]),
+    Holiday(mm: .NISAN, dd: 18, desc: "Pesach IV (CH''M)",
+            flags: [.CHUL_ONLY, .CHOL_HAMOED]),
+    Holiday(mm: .NISAN, dd: 19, desc: "Pesach V (CH''M)",
+            flags: [.CHUL_ONLY, .CHOL_HAMOED]),
+    Holiday(mm: .NISAN, dd: 20, desc: "Pesach VI (CH''M)",
+            flags: [.CHUL_ONLY, .CHOL_HAMOED, .LIGHT_CANDLES]),
+    Holiday(mm: .NISAN, dd: 21, desc: "Pesach VII",
+            flags: [.CHUL_ONLY, .CHAG, .LIGHT_CANDLES_TZEIS]),
+    Holiday(mm: .NISAN, dd: 22, desc: "Pesach VIII",
+            flags: [.CHUL_ONLY, .CHAG, .YOM_TOV_ENDS]),
+
+    Holiday(mm: .IYYAR, dd: 14, desc: "Pesach Sheni", flags: .MINOR_HOLIDAY),
+    Holiday(mm: .IYYAR, dd: 18, desc: "Lag BaOmer", flags: .MINOR_HOLIDAY, emoji: "🔥"),
+    Holiday(mm: .SIVAN, dd: 5, desc: "Erev Shavuot",
+            flags: [.EREV, .LIGHT_CANDLES], emoji: "⛰️🌸"),
+    Holiday(mm: .SIVAN, dd: 6, desc: "Shavuot",
+            flags: [.IL_ONLY, .CHAG, .YOM_TOV_ENDS], emoji: "⛰️🌸"),
+    Holiday(mm: .SIVAN, dd: 6, desc: "Shavuot I",
+            flags: [.CHUL_ONLY, .CHAG, .LIGHT_CANDLES_TZEIS], emoji: "⛰️🌸"),
+    Holiday(mm: .SIVAN, dd: 7, desc: "Shavuot II",
+            flags: [.CHUL_ONLY, .CHAG, .YOM_TOV_ENDS], emoji: "⛰️🌸"),
+    Holiday(mm: .AV, dd: 15, desc: "Tu B'Av",
+            flags: .MINOR_HOLIDAY, emoji: "❤️"),
+    Holiday(mm: .ELUL, dd: 1, desc: "Rosh Hashana LaBehemot",
+            flags: .MINOR_HOLIDAY, emoji: "🐑"),
+    Holiday(mm: .ELUL, dd: 29, desc: "Erev Rosh Hashana",
+            flags: [.EREV, .LIGHT_CANDLES], emoji: "🍏🍯"),
 ]
 
 public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
@@ -138,8 +190,27 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
                desc: "Shabbat Zachor", flags: .SPECIAL_SHABBAT),
         HEvent(hdate: HDate(absdate: pesachAbs - (pesach.dow() == .TUE ? 33 : 31)),
                desc: "Ta'anit Esther", flags: .MINOR_FAST),
+        HEvent(hdate: HDate(absdate: pesachAbs - (pesach.dow() == .SUN ? 28 : 29)),
+               desc: "Shushan Purim", flags: .MINOR_HOLIDAY),
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 14) - 7),
+               desc: "Shabbat Parah", flags: .SPECIAL_SHABBAT),
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 14)),
+               desc: "Shabbat HaChodesh", flags: .SPECIAL_SHABBAT),
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 1)),
+               desc: "Shabbat HaGadol", flags: .SPECIAL_SHABBAT),
+        HEvent(hdate: pesach.prev().dow() == .SAT ?
+                HDate(absdate: dayOnOrBefore(dayOfWeek: .THU, absdate: pesachAbs)) :
+                HDate(yy: year, mm: .NISAN, dd: 14),
+               desc: "Ta'anit Bechorot", flags: .MINOR_FAST),
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(
+                dayOfWeek: .SAT,
+                absdate: HDate(yy: year + 1, mm: .TISHREI, dd: 1).abs() - 4)),
+               desc: "Leil Selichot", flags: .MINOR_HOLIDAY, emoji: "🕍"),
     ])
-
+    if isLeapYear(year: year) {
+        events.append(HEvent(hdate: HDate(yy: year, mm: .ADAR_I, dd: 14),
+                             desc: "Purim Katan", flags: .MINOR_HOLIDAY, emoji: "🎭️"))
+    }
     // chanukah
     for i in 2...6 {
         events.append(
@@ -167,6 +238,93 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
                flags: .MINOR_HOLIDAY,
                emoji: chanukahEmoji),
     ])
+
+    // Tisha BAv and the 3 weeks
+    var tamuz17 = HDate(yy: year, mm: .TAMUZ, dd: 17)
+    if tamuz17.dow() == .SAT {
+        tamuz17 = tamuz17.next()
+    }
+    events.append(HEvent(hdate: tamuz17, desc: "Tzom Tammuz", flags: .MINOR_FAST))
+
+    var av9dt = HDate(yy: year, mm: .AV, dd: 9)
+    var av9title = "Tish'a B'Av"
+    if av9dt.dow() == .SAT {
+        av9dt = av9dt.next()
+        av9title += " (observed)"
+    }
+    let av9abs = av9dt.abs()
+    events.append(contentsOf: [
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: av9abs)),
+               desc: "Shabbat Chazon", flags: .SPECIAL_SHABBAT),
+        HEvent(hdate: av9dt.prev(), desc: "Erev Tish'a B'Av", flags: [.EREV, .MAJOR_FAST]),
+        HEvent(hdate: av9dt, desc: av9title, flags: .MAJOR_FAST),
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: av9abs + 7)),
+               desc: "Shabbat Nachamu", flags: .SPECIAL_SHABBAT),
+    ])
+    // modern holidays
+    if year >= 5711 {
+        // Yom HaShoah first observed in 1951
+        var nisan27dt = HDate(yy: year, mm: .NISAN, dd: 27)
+        /* When the actual date of Yom Hashoah falls on a Friday, the
+         * state of Israel observes Yom Hashoah on the preceding
+         * Thursday. When it falls on a Sunday, Yom Hashoah is observed
+         * on the following Monday.
+         * http://www.ushmm.org/remembrance/dor/calendar/
+         */
+        if nisan27dt.dow() == .FRI {
+            nisan27dt = nisan27dt.prev()
+        } else if nisan27dt.dow() == .SUN {
+            nisan27dt = nisan27dt.next()
+        }
+        events.append(HEvent(hdate: nisan27dt, desc: "Yom HaShoah", flags: .MODERN_HOLIDAY))
+    }
+
+    if year >= 5708 {
+        // Yom HaAtzma'ut only celebrated after 1948
+        var day: Int
+        if (pesach.dow() == .SUN) {
+            day = 2
+        } else if (pesach.dow() == .SAT) {
+            day = 3
+        } else if (year < 5764) {
+            day = 4
+        } else if (pesach.dow() == .TUE) {
+            day = 5
+        } else {
+            day = 4
+        }
+        let tmpDate = HDate(yy: year, mm: .IYYAR, dd: day)
+        events.append(contentsOf: [
+            HEvent(hdate: tmpDate, desc: "Yom HaZikaron", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"),
+            HEvent(hdate: tmpDate.next(), desc: "Yom HaAtzma'ut", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"),
+        ])
+    }
+
+    // Rosh Chodesh
+    for i in 1...monthsInYear(year: year) {
+        let isNisan = i == 1
+        let prevMonthNum = isNisan ? monthsInYear(year: year - 1) : i - 1
+        let prevMonth = HebrewMonth(rawValue: prevMonthNum)!
+        let prevMonthNumDays = daysInMonth(month: prevMonth, year: isNisan ? year - 1 : year)
+        let month = HebrewMonth(rawValue: i)!
+        let monthName = HDate(yy: year, mm: month, dd: 1).monthName()
+        let desc = "Rosh Chodesh \(monthName)"
+        if prevMonthNumDays == 30 {
+            events.append(HEvent(hdate: HDate(yy: year, mm: prevMonth, dd: 30),
+                                 desc: desc, flags: .ROSH_CHODESH))
+            events.append(HEvent(hdate: HDate(yy: year, mm: month, dd: 1),
+                                 desc: desc, flags: .ROSH_CHODESH))
+        } else if month != .TISHREI {
+            events.append(HEvent(hdate: HDate(yy: year, mm: month, dd: 1),
+                                 desc: desc, flags: .ROSH_CHODESH))
+        }
+    }
+
+    /*
+    let sedra = Sedra(year: year, il: il)
+    let beshalachHd = sedra.find(15)
+    events.append(HEvent(hdate: beshalachHd, desc: "Shabbat Shirah", flags: .SPECIAL_SHABBAT))
+    */
 
     events.sort()
     return events
