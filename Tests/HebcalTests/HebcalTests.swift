@@ -20,4 +20,9 @@
             XCTAssertEqual(hebnumToString(number: 17), "י״ז")
             XCTAssertEqual(hebnumToString(number: 29), "כ״ט")
        }
+
+        func testHolidays() {
+            let holidays = getHolidaysForYear(year: 5782)
+            XCTAssertEqual(holidays.count, 24)
+        }
     }
