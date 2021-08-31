@@ -97,16 +97,16 @@
                 ["2011-03-06", "Rosh Chodesh Adar II"],
                 ["2011-03-07", "Rosh Chodesh Adar II"],
                 ["2011-03-17", "Ta'anit Esther"],
-                ["2011-03-19", "Shabbat Zachor"],
                 ["2011-03-19", "Erev Purim"],
+                ["2011-03-19", "Shabbat Zachor"],
                 ["2011-03-20", "Purim"],
                 ["2011-03-21", "Shushan Purim"],
                 ["2011-03-26", "Shabbat Parah"],
                 ["2011-04-02", "Shabbat HaChodesh"],
                 ["2011-04-05", "Rosh Chodesh Nisan"],
                 ["2011-04-16", "Shabbat HaGadol"],
-                ["2011-04-18", "Ta'anit Bechorot"],
                 ["2011-04-18", "Erev Pesach"],
+                ["2011-04-18", "Ta'anit Bechorot"],
                 ["2011-04-19", "Pesach I"],
                 ["2011-04-20", "Pesach II"],
                 ["2011-04-21", "Pesach III (CH''M)"],
@@ -142,11 +142,10 @@
                 ["2011-09-24", "Leil Selichot"],
                 ["2011-09-28", "Erev Rosh Hashana"],
             ]
+            XCTAssertEqual(actual.count, expected.count)
             for i in 0...actual.count-1 {
                 XCTAssertEqual(actual[i], expected[i])
             }
-            XCTAssertEqual(actual.count, expected.count)
-            XCTAssertEqual(actual, expected)
         }
 
         func testGetHolidaysForYearArrayIL() {
@@ -197,16 +196,16 @@
                 ["1960-02-28", "Rosh Chodesh Adar"],
                 ["1960-02-29", "Rosh Chodesh Adar"],
                 ["1960-03-10", "Ta'anit Esther"],
-                ["1960-03-12", "Shabbat Zachor"],
                 ["1960-03-12", "Erev Purim"],
+                ["1960-03-12", "Shabbat Zachor"],
                 ["1960-03-13", "Purim"],
                 ["1960-03-14", "Shushan Purim"],
                 ["1960-03-19", "Shabbat Parah"],
                 ["1960-03-26", "Shabbat HaChodesh"],
                 ["1960-03-29", "Rosh Chodesh Nisan"],
                 ["1960-04-09", "Shabbat HaGadol"],
-                ["1960-04-11", "Ta'anit Bechorot"],
                 ["1960-04-11", "Erev Pesach"],
+                ["1960-04-11", "Ta'anit Bechorot"],
                 ["1960-04-12", "Pesach I"],
                 ["1960-04-13", "Pesach II (CH''M)"],
                 ["1960-04-14", "Pesach III (CH''M)"],
@@ -239,10 +238,9 @@
                 ["1960-09-17", "Leil Selichot"],
                 ["1960-09-21", "Erev Rosh Hashana"],
             ]
+            XCTAssertEqual(actual.count, expected.count)
             for i in 0...actual.count-1 {
                 XCTAssertEqual(actual[i], expected[i])
             }
-            XCTAssertEqual(actual.count, expected.count)
-            XCTAssertEqual(actual, expected)
         }
     }
