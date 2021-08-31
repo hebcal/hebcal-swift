@@ -239,7 +239,7 @@ public struct HDate: Comparable {
         case .TEVET: return "Tevet"
         case .SHVAT: return "Sh'vat"
         case .ADAR_I:
-            return isLeapYear(year: self.yy) ? "Adar" : "Adar I"
+            return isLeapYear(year: self.yy) ? "Adar I" : "Adar"
         case .ADAR_II:
             return "Adar II"
         }

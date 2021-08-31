@@ -143,8 +143,7 @@
                 ["2011-09-28", "Erev Rosh Hashana"],
             ]
             for i in 0...actual.count-1 {
-                XCTAssertEqual(actual.count, expected.count)
-
+                XCTAssertEqual(actual[i], expected[i])
             }
             XCTAssertEqual(actual.count, expected.count)
             XCTAssertEqual(actual, expected)
@@ -240,6 +239,9 @@
                 ["1960-09-17", "Leil Selichot"],
                 ["1960-09-21", "Erev Rosh Hashana"],
             ]
+            for i in 0...actual.count-1 {
+                XCTAssertEqual(actual[i], expected[i])
+            }
             XCTAssertEqual(actual.count, expected.count)
             XCTAssertEqual(actual, expected)
         }

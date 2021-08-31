@@ -183,6 +183,8 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
     let pesach = HDate(yy: year, mm: .NISAN, dd: 15)
     let pesachAbs = pesach.abs()
     events.append(contentsOf: [
+        HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: 7 + RH.abs())),
+               desc: "Shabbat Shuva", flags: .SPECIAL_SHABBAT),
         HEvent(hdate: HDate(yy: year, mm: .TISHREI, dd: 3 + (RH.dow() == .THU ? 1 : 0)),
                desc: "Tzom Gedaliah", flags: .MINOR_FAST),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 43)),
