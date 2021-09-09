@@ -364,7 +364,7 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
 }
 
 public func getHolidaysOnDate(hdate: HDate, il: Bool) -> [HEvent] {
-    let events = getHolidaysForYear(year: hdate.yy, il: il)
+    let events = getAllHolidaysForYear(year: hdate.yy)
     return getHolidaysOnDate(events: events, hdate: hdate, il: il)
 }
 
@@ -372,7 +372,10 @@ public func getHolidaysOnDate(events: [HEvent], hdate: HDate, il: Bool) -> [HEve
     var result = [HEvent]()
     for ev in events {
         if ev.hdate == hdate {
-            result.append(ev)
+            let f = ev.flags
+            if (il && !f.contains(.CHUL_ONLY)) || (!il && !f.contains(.IL_ONLY)) {
+                result.append(ev)
+            }
         } else if ev.hdate > hdate {
             break
         }

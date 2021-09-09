@@ -46,7 +46,18 @@
             XCTAssertEqual(h.count, 1)
             XCTAssertEqual(h[0].desc, "Rosh Chodesh Sivan")
         }
-        
+
+        func testHolidaysOnDate2() {
+            let events = getAllHolidaysForYear(year: 5782)
+            let hdate = HDate(yy: 5782, mm: .TISHREI, dd: 16)
+            let h = getHolidaysOnDate(events: events, hdate: hdate, il: true)
+            XCTAssertEqual(h.count, 1)
+            XCTAssertEqual(h[0].desc, "Sukkot II (CH''M)")
+            let h2 = getHolidaysOnDate(events: events, hdate: hdate, il: false)
+            XCTAssertEqual(h2.count, 1)
+            XCTAssertEqual(h2[0].desc, "Sukkot II")
+        }
+
         func testGetHolidaysForYearArrayDiaspora() {
             let events = getHolidaysForYear(year: 5771, il: false)
             var actual = [[String]]()
