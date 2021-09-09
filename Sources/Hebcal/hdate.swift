@@ -160,7 +160,7 @@ func newYear(year: Int) -> Int64 {
     return EPOCH + elapsedDays(year: year) + Int64(newYearDelay(year: year))
 }
 
-public struct HDate: Comparable {
+public class HDate: Comparable {
     public static func < (lhs: HDate, rhs: HDate) -> Bool {
         if lhs.yy != rhs.yy {
             return lhs.yy < rhs.yy
@@ -176,6 +176,7 @@ public struct HDate: Comparable {
     public let yy: Int
     public let mm: HebrewMonth
     public let dd: Int
+    private var absdate: Int64?
 
     public init(yy: Int, mm: HebrewMonth, dd: Int) {
         self.yy = yy
@@ -183,11 +184,12 @@ public struct HDate: Comparable {
         self.dd = dd
     }
 
-    public init(date: Date) {
+    public convenience init(date: Date) {
         self.init(absdate: greg2abs(date: date))
     }
 
     public init(absdate: Int64) {
+        self.absdate = absdate
         let approx = 1 + Int(Double(absdate - EPOCH) / 365.24682220597794)
         var year = approx - 1
         while (newYear(year: year) <= absdate) {
@@ -205,7 +207,10 @@ public struct HDate: Comparable {
     }
 
     public func abs() -> Int64 {
-        return hebrew2abs(year: self.yy, month: self.mm, day: self.dd)
+        if absdate == nil {
+            absdate = hebrew2abs(year: self.yy, month: self.mm, day: self.dd)
+        }
+        return absdate!
     }
 
     public func greg() -> Date {
