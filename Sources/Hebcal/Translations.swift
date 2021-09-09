@@ -234,6 +234,7 @@ let heTranslations = [
     "Yom Kippur": "יוֹם כִּפּוּר",
     "Yom Yerushalayim": "יוֹם יְרוּשָׁלַיִם",
     "Yom HaAliyah": "יוֹם העלייה",
+    "Yom HaAliyah School Observance": "שמירת בית הספר ליום העלייה",
     "Rosh Hashana LaBehemot": "רֹאשׁ הַשָּׁנָה לְמַעְשַׂר בְּהֵמָה",
     "Tish'a B'Av (observed)": "תִּשְׁעָה בְּאָב נִדחֶה",
     "Shabbat Mevarchim Chodesh": "שַׁבָּת מברכים חוֹדֶשׁ",

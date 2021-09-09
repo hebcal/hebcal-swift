@@ -19,17 +19,21 @@
             XCTAssertEqual(hebnumToString(number: 16), "ט״ז")
             XCTAssertEqual(hebnumToString(number: 17), "י״ז")
             XCTAssertEqual(hebnumToString(number: 29), "כ״ט")
-       }
+        }
+
+        func testAllHolidays() {
+            XCTAssertEqual(getAllHolidaysForYear(year: 5783).count, 101)
+        }
 
         func testHolidays() {
             let holidaysDiaspora = getHolidaysForYear(year: 5782, il: false)
-            XCTAssertEqual(holidaysDiaspora.count, 87)
+            XCTAssertEqual(holidaysDiaspora.count, 88)
             let holidaysIL = getHolidaysForYear(year: 5782, il: true)
-            XCTAssertEqual(holidaysIL.count, 84)
-            XCTAssertEqual(getHolidaysForYear(year: 5783, il: false).count, 85)
-            XCTAssertEqual(getHolidaysForYear(year: 5783, il: true).count, 82)
-            XCTAssertEqual(getHolidaysForYear(year: 5784, il: false).count, 86)
-            XCTAssertEqual(getHolidaysForYear(year: 5784, il: true).count, 83)
+            XCTAssertEqual(holidaysIL.count, 85)
+            XCTAssertEqual(getHolidaysForYear(year: 5783, il: false).count, 86)
+            XCTAssertEqual(getHolidaysForYear(year: 5783, il: true).count, 83)
+            XCTAssertEqual(getHolidaysForYear(year: 5784, il: false).count, 87)
+            XCTAssertEqual(getHolidaysForYear(year: 5784, il: true).count, 84)
         }
 
         func testHolidaysOnDate() {
@@ -41,7 +45,6 @@
             h = getHolidaysOnDate(hdate: HDate(yy: 5785, mm: .SIVAN, dd: 1), il: true)
             XCTAssertEqual(h.count, 1)
             XCTAssertEqual(h[0].desc, "Rosh Chodesh Sivan")
-
         }
         
         func testGetHolidaysForYearArrayDiaspora() {

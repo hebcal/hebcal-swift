@@ -72,9 +72,6 @@ struct Holiday {
 }
 
 let chanukahEmoji = "🕎"
-let keyCapDigits = [
-    "0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣",
-]
 
 let staticHolidays: [Holiday] = [
     Holiday(mm: .TISHREI, dd: 1, desc: "Rosh Hashana",
@@ -111,7 +108,7 @@ let staticHolidays: [Holiday] = [
             flags: [.LIGHT_CANDLES, .CHOL_HAMOED]),
     Holiday(mm: .KISLEV, dd: 24, desc: "Chanukah: 1 Candle",
             flags: [.EREV, .MINOR_HOLIDAY, .CHANUKAH_CANDLES],
-            emoji: chanukahEmoji + keyCapDigits[1]),
+            emoji: chanukahEmoji),
     Holiday(mm: .TEVET, dd: 10, desc: "Asara B'Tevet", flags: .MINOR_FAST),
     Holiday(mm: .SHVAT, dd: 15, desc: "Tu BiShvat", flags: .MINOR_HOLIDAY, emoji: "🌳"),
     Holiday(mm: .ADAR_II, dd: 13, desc: "Erev Purim", flags: [.EREV, .MINOR_HOLIDAY], emoji: "🎭️📜"),
@@ -169,12 +166,17 @@ let staticHolidays: [Holiday] = [
 ]
 
 public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
+    let events = getAllHolidaysForYear(year: year)
+    let result = events.filter {
+        (il && !$0.flags.contains(.CHUL_ONLY)) || (!il && !$0.flags.contains(.IL_ONLY))
+    }
+    return result
+}
+
+public func getAllHolidaysForYear(year: Int) -> [HEvent] {
     var events = [HEvent]()
     // standard holidays that don't shift based on year
     for h in staticHolidays {
-        if (il && h.flags.contains(.CHUL_ONLY)) || (!il && h.flags.contains(.IL_ONLY)) {
-            continue
-        }
         events.append(HEvent(hdate: HDate(yy: year, mm: h.mm, dd: h.dd),
                              desc: h.desc, flags: h.flags, emoji: h.emoji))
     }
@@ -184,23 +186,29 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
     let pesachAbs = pesach.abs()
     events.append(contentsOf: [
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: 7 + RH.abs())),
-               desc: "Shabbat Shuva", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat Shuva", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
         HEvent(hdate: HDate(yy: year, mm: .TISHREI, dd: 3 + (RH.dow() == .THU ? 1 : 0)),
                desc: "Tzom Gedaliah", flags: .MINOR_FAST),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 43)),
-               desc: "Shabbat Shekalim", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat Shekalim", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 30)),
-               desc: "Shabbat Zachor", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat Zachor", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
         HEvent(hdate: HDate(absdate: pesachAbs - (pesach.dow() == .TUE ? 33 : 31)),
                desc: "Ta'anit Esther", flags: .MINOR_FAST),
         HEvent(hdate: HDate(absdate: pesachAbs - (pesach.dow() == .SUN ? 28 : 29)),
-               desc: "Shushan Purim", flags: .MINOR_HOLIDAY),
+               desc: "Shushan Purim", flags: .MINOR_HOLIDAY, emoji: "🎭️📜"),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 14) - 7),
-               desc: "Shabbat Parah", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat Parah", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 14)),
-               desc: "Shabbat HaChodesh", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat HaChodesh", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 1)),
-               desc: "Shabbat HaGadol", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat HaGadol", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
         HEvent(hdate: pesach.prev().dow() == .SAT ?
                 HDate(absdate: dayOnOrBefore(dayOfWeek: .THU, absdate: pesachAbs)) :
                 HDate(yy: year, mm: .NISAN, dd: 14),
@@ -220,7 +228,7 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
             HEvent(hdate: HDate(yy: year, mm: .KISLEV, dd: 23 + i),
                    desc: "Chanukah: \(i) Candles",
                    flags: [.MINOR_HOLIDAY, .CHANUKAH_CANDLES],
-                   emoji: chanukahEmoji + keyCapDigits[i])
+                   emoji: chanukahEmoji)
             )
     }
     let chanukah7 = shortKislev(year: year) ?
@@ -231,11 +239,11 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
         HEvent(hdate: chanukah7,
                desc: "Chanukah: 7 Candles",
                flags: [.MINOR_HOLIDAY, .CHANUKAH_CANDLES],
-               emoji: chanukahEmoji + keyCapDigits[7]),
+               emoji: chanukahEmoji),
         HEvent(hdate: chanukah8,
                desc: "Chanukah: 8 Candles",
                flags: [.MINOR_HOLIDAY, .CHANUKAH_CANDLES],
-               emoji: chanukahEmoji + keyCapDigits[8]),
+               emoji: chanukahEmoji),
         HEvent(hdate: chanukah8.next(),
                desc: "Chanukah: 8th Day",
                flags: .MINOR_HOLIDAY,
@@ -258,11 +266,13 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
     let av9abs = av9dt.abs()
     events.append(contentsOf: [
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: av9abs)),
-               desc: "Shabbat Chazon", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat Chazon", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
         HEvent(hdate: av9dt.prev(), desc: "Erev Tish'a B'Av", flags: [.EREV, .MAJOR_FAST]),
         HEvent(hdate: av9dt, desc: av9title, flags: .MAJOR_FAST),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: av9abs + 7)),
-               desc: "Shabbat Nachamu", flags: .SPECIAL_SHABBAT),
+               desc: "Shabbat Nachamu", flags: .SPECIAL_SHABBAT,
+               emoji: "🕍"),
     ])
 
     // modern holidays
@@ -344,9 +354,10 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
         }
     }
 
-    let sedra = Sedra(year: year, il: il)
+    let sedra = Sedra(year: year, il: false)
     let beshalachHd = sedra.find(15)!
-    events.append(HEvent(hdate: beshalachHd, desc: "Shabbat Shirah", flags: .SPECIAL_SHABBAT))
+    events.append(HEvent(hdate: beshalachHd, desc: "Shabbat Shirah", flags: .SPECIAL_SHABBAT,
+                         emoji: "🕍"))
 
     events.sort()
     return events
@@ -354,6 +365,10 @@ public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
 
 public func getHolidaysOnDate(hdate: HDate, il: Bool) -> [HEvent] {
     let events = getHolidaysForYear(year: hdate.yy, il: il)
+    return getHolidaysOnDate(events: events, hdate: hdate, il: il)
+}
+
+public func getHolidaysOnDate(events: [HEvent], hdate: HDate, il: Bool) -> [HEvent] {
     var result = [HEvent]()
     for ev in events {
         if ev.hdate == hdate {
