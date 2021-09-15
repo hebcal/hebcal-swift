@@ -37,6 +37,17 @@ public func monthsInYear(year: Int) -> Int {
     return 12 + extra
 }
 
+var edCache = [Int:Int64]()
+
+func elapsedDays(year: Int) -> Int64 {
+    if let ed = edCache[year] {
+        return ed
+    }
+    let ed = elapsedDays0(year: year)
+    edCache[year] = ed
+    return ed
+}
+
 /**
  * Days from sunday prior to start of Hebrew calendar to mean
  * conjunction of Tishrei in Hebrew YEAR
@@ -44,7 +55,7 @@ public func monthsInYear(year: Int) -> Int {
  * @param {number} year Hebrew year
  * @return {number}
  */
-func elapsedDays(year: Int) -> Int64 {
+func elapsedDays0(year: Int) -> Int64 {
     let prevYear = year - 1
     
     let mElapsedMonths = 235 * (prevYear / 19)
@@ -127,18 +138,20 @@ public func daysInMonth(month: HebrewMonth, year: Int) -> Int {
     }
 }
 
+let TISHREI = HebrewMonth.TISHREI.rawValue
+
 public func hebrew2abs(year: Int, month: HebrewMonth, day: Int) -> Int64 {
     var tempabs: Int64 = Int64(day)
     let imonth: Int = month.rawValue
-    if imonth < HebrewMonth.TISHREI.rawValue {
-        for m in HebrewMonth.TISHREI.rawValue...monthsInYear(year: year) {
+    if imonth < TISHREI {
+        for m in TISHREI...monthsInYear(year: year) {
             tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
         }
         for m in HebrewMonth.NISAN.rawValue..<imonth {
             tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
         }
     } else {
-        for m in HebrewMonth.TISHREI.rawValue..<imonth {
+        for m in TISHREI..<imonth {
             tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
         }
     }
@@ -190,8 +203,8 @@ public class HDate: Comparable {
 
     public init(absdate: Int64) {
         self.absdate = absdate
-        let approx = 1 + Int(Double(absdate - EPOCH) / 365.24682220597794)
-        var year = approx - 1
+        let approx = Int(Double(absdate - EPOCH) / 365.24682220597794)
+        var year = approx
         while (newYear(year: year) <= absdate) {
             year = year + 1
         }
