@@ -2,6 +2,82 @@
     @testable import Hebcal
 
     final class HebcalTests: XCTestCase {
+
+        func testelapsedDays() {
+            XCTAssertEqual(elapsedDays(year: 5780), 2110760)
+            XCTAssertEqual(elapsedDays(year: 5708), 2084447)
+            XCTAssertEqual(elapsedDays(year: 3762), 1373677)
+            XCTAssertEqual(elapsedDays(year: 3671), 1340455)
+            XCTAssertEqual(elapsedDays(year: 1234), 450344)
+            XCTAssertEqual(elapsedDays(year: 123), 44563)
+            XCTAssertEqual(elapsedDays(year: 2), 356)
+            XCTAssertEqual(elapsedDays(year: 1), 1)
+        }
+
+        func testisLeapYear() {
+            XCTAssertEqual(isLeapYear(year: 5779), true)
+            XCTAssertEqual(isLeapYear(year: 5782), true)
+            XCTAssertEqual(isLeapYear(year: 5784), true)
+            XCTAssertEqual(isLeapYear(year: 5780), false)
+            XCTAssertEqual(isLeapYear(year: 5781), false)
+            XCTAssertEqual(isLeapYear(year: 5783), false)
+            XCTAssertEqual(isLeapYear(year: 5778), false)
+            XCTAssertEqual(isLeapYear(year: 5749), true)
+            XCTAssertEqual(isLeapYear(year: 5511), false)
+            XCTAssertEqual(isLeapYear(year: 5252), true)
+            XCTAssertEqual(isLeapYear(year: 4528), true)
+            XCTAssertEqual(isLeapYear(year: 4527), false)
+        }
+
+        func testdaysInYear() {
+            XCTAssertEqual(daysInYear(year: 5779), 385)
+            XCTAssertEqual(daysInYear(year: 5780), 355)
+            XCTAssertEqual(daysInYear(year: 5781), 353)
+            XCTAssertEqual(daysInYear(year: 5782), 384)
+            XCTAssertEqual(daysInYear(year: 5783), 355)
+            XCTAssertEqual(daysInYear(year: 5784), 383)
+            XCTAssertEqual(daysInYear(year: 5785), 355)
+            XCTAssertEqual(daysInYear(year: 5786), 354)
+            XCTAssertEqual(daysInYear(year: 5787), 385)
+            XCTAssertEqual(daysInYear(year: 5788), 355)
+            XCTAssertEqual(daysInYear(year: 5789), 354)
+            XCTAssertEqual(daysInYear(year: 3762), 383)
+            XCTAssertEqual(daysInYear(year: 3671), 354)
+            XCTAssertEqual(daysInYear(year: 1234), 353)
+            XCTAssertEqual(daysInYear(year: 123), 355)
+            XCTAssertEqual(daysInYear(year: 2), 355)
+            XCTAssertEqual(daysInYear(year: 1), 355)
+        }
+
+        func testdaysInMonth() {
+            XCTAssertEqual(daysInMonth(month: .IYYAR, year: 5780), 29)
+            XCTAssertEqual(daysInMonth(month: .SIVAN, year: 5780), 30)
+            XCTAssertEqual(daysInMonth(month: .CHESHVAN, year: 5782), 29)
+            XCTAssertEqual(daysInMonth(month: .CHESHVAN, year: 5783), 30)
+            XCTAssertEqual(daysInMonth(month: .KISLEV, year: 5783), 30)
+            XCTAssertEqual(daysInMonth(month: .KISLEV, year: 5784), 29)
+        }
+
+        func testhebrew2abs() {
+            XCTAssertEqual(hebrew2abs(year: 5769, month: .CHESHVAN, day: 15), 733359)
+            XCTAssertEqual(hebrew2abs(year: 5708, month: .IYYAR, day: 6), 711262)
+            XCTAssertEqual(hebrew2abs(year: 3762, month: .TISHREI, day: 1), 249)
+            XCTAssertEqual(hebrew2abs(year: 3761, month: .NISAN, day: 1), 72)
+            XCTAssertEqual(hebrew2abs(year: 3761, month: .TEVET, day: 18), 1)
+            XCTAssertEqual(hebrew2abs(year: 3761, month: .TEVET, day: 17), 0)
+            XCTAssertEqual(hebrew2abs(year: 3761, month: .TEVET, day: 16), -1)
+            XCTAssertEqual(hebrew2abs(year: 3761, month: .TEVET, day: 1), -16)
+        }
+
+        func testabs2hebrew() {
+            XCTAssertEqual(HDate(absdate: 733359), HDate(yy: 5769, mm: .CHESHVAN, dd: 15))
+            XCTAssertEqual(HDate(absdate: 711262), HDate(yy: 5708, mm: .IYYAR, dd: 6))
+            XCTAssertEqual(HDate(absdate: 249), HDate(yy: 3762, mm: .TISHREI, dd: 1))
+            XCTAssertEqual(HDate(absdate: 1), HDate(yy: 3761, mm: .TEVET, dd: 18))
+            XCTAssertEqual(HDate(absdate: 0), HDate(yy: 3761, mm: .TEVET, dd: 17))
+            XCTAssertEqual(HDate(absdate: -16), HDate(yy: 3761, mm: .TEVET, dd: 1))
+        }
+
         func testlookupTranslation() {
             XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.en), "Noach")
             XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.ashkenazi), "Noach")
