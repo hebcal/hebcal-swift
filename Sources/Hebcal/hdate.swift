@@ -37,7 +37,7 @@ public func monthsInYear(year: Int) -> Int {
     return 12 + extra
 }
 
-var edCache = [Int:Int64]()
+var edCache: [Int:Int64] = [:]
 
 func elapsedDays(year: Int) -> Int64 {
     if let ed = edCache[year] {
