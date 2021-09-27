@@ -81,10 +81,12 @@
         func testlookupTranslation() {
             XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.en), "Noach")
             XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.ashkenazi), "Noach")
-            XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.he), "נֹחַ")
+            XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.he), "נח")
+            XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.heNikud), "נֹחַ")
             XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.en), "Bechukotai")
             XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.ashkenazi), "Bechukosai")
-            XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.he), "בְּחֻקֹּתַי")
+            XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.he), "בחקתי")
+            XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.heNikud), "בְּחֻקֹּתַי")
         }
 
         func testHebnum() {

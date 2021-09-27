@@ -6,7 +6,7 @@
 import Foundation
 
 public enum TranslationLang: Int, CaseIterable, Codable {
-    case en = 0, ashkenazi = 1, he = 2
+    case en = 0, ashkenazi = 1, he = 2, heNikud = 3
 }
 
 public func lookupTranslation(str: String, lang: TranslationLang) -> String {
@@ -24,6 +24,16 @@ public func lookupTranslation(str: String, lang: TranslationLang) -> String {
             return msg
         } else {
             return str
+        }
+    case .heNikud:
+        if let msg = parshaNikud[str] {
+            return msg
+        } else {
+            if let msg2 = heTranslations[str] {
+                return msg2
+            } else {
+                return str
+            }
         }
     }
 }
@@ -239,4 +249,61 @@ let heTranslations = [
     "Tish'a B'Av (observed)": "תשעה באב נדחה",
     "Shabbat Mevarchim Chodesh": "שבת מברכים חודש",
     "Shabbat Shirah": "שבת שירה",
+]
+
+let parshaNikud = [
+    "Achrei Mot": "אַחֲרֵי מוֹת",
+    "Balak": "בָּלָק",
+    "Bamidbar": "בְּמִדְבַּר",
+    "Bechukotai": "בְּחֻקֹּתַי",
+    "Beha'alotcha": "בְּהַעֲלֹתְךָ",
+    "Behar": "בְּהַר",
+    "Bereshit": "בְּרֵאשִׁית",
+    "Beshalach": "בְּשַׁלַּח",
+    "Bo": "בֹּא",
+    "Chayei Sara": "חַיֵּי שָֹרָה",
+    "Chukat": "חֻקַּת",
+    "Devarim": "דְּבָרִים",
+    "Eikev": "עֵקֶב",
+    "Emor": "אֱמוֹר",
+    "Ha'Azinu": "הַאֲזִינוּ",
+    "Kedoshim": "קְדשִׁים",
+    "Ki Tavo": "כִּי־תָבוֹא",
+    "Ki Teitzei": "כִּי־תֵצֵא",
+    "Ki Tisa": "כִּי תִשָּׂא",
+    "Korach": "קוֹרַח",
+    "Lech-Lecha": "לֶךְ־לְךָ",
+    "Masei": "מַסְעֵי",
+    "Matot": "מַּטּוֹת",
+    "Metzora": "מְּצֹרָע",
+    "Miketz": "מִקֵּץ",
+    "Mishpatim": "מִּשְׁפָּטִים",
+    "Nasso": "נָשׂא",
+    "Nitzavim": "נִצָּבִים",
+    "Noach": "נֹחַ",
+    "Pekudei": "פְקוּדֵי",
+    "Pinchas": "פִּינְחָס",
+    "Re'eh": "רְאֵה",
+    "Sh'lach": "שְׁלַח־לְךָ",
+    "Shemot": "שְׁמוֹת",
+    "Shmini": "שְּׁמִינִי",
+    "Shoftim": "שׁוֹפְטִים",
+    "Tazria": "תַזְרִיעַ",
+    "Terumah": "תְּרוּמָה",
+    "Tetzaveh": "תְּצַוֶּה",
+    "Toldot": "תּוֹלְדוֹת",
+    "Tzav": "צַו",
+    "Vaera": "וָאֵרָא",
+    "Vaetchanan": "וָאֶתְחַנַּן",
+    "Vayakhel": "וַיַּקְהֵל",
+    "Vayechi": "וַיְחִי",
+    "Vayeilech": "וַיֵּלֶךְ",
+    "Vayera": "וַיֵּרָא",
+    "Vayeshev": "וַיֵּשֶׁב",
+    "Vayetzei": "וַיֵּצֵא",
+    "Vayigash": "וַיִּגַּשׁ",
+    "Vayikra": "וַיִּקְרָא",
+    "Vayishlach": "וַיִּשְׁלַח",
+    "Vezot Haberakhah": "וְזֹאת הַבְּרָכָה",
+    "Yitro": "יִתְרוֹ",
 ]
