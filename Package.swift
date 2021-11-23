@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Hebcal",
+    defaultLocalization: "en",
     platforms: [
         .macOS(.v10_14), .iOS(.v11), .watchOS(.v5)
     ],

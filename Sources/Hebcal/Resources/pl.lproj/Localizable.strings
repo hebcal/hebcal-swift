@@ -1,0 +1,303 @@
+"Berachot" = "";
+"Shabbat" = "Szabbat";
+"Eruvin" = "Eruwin";
+"Pesachim" = "";
+"Shekalim" = "Szekalim";
+"Yoma" = "Joma";
+"Sukkah" = "";
+"Beitzah" = "";
+"Taanit" = "";
+"Megillah" = "Megilla";
+"Moed Katan" = "";
+"Chagigah" = "";
+"Yevamot" = "";
+"Ketubot" = "";
+"Nedarim" = "";
+"Nazir" = "";
+"Sotah" = "";
+"Gitin" = "";
+"Kiddushin" = "Kidduszin";
+"Baba Kamma" = "";
+"Baba Metzia" = "";
+"Baba Batra" = "";
+"Sanhedrin" = "";
+"Makkot" = "";
+"Shevuot" = "Szewuot";
+"Avodah Zarah" = "";
+"Horayot" = "";
+"Zevachim" = "";
+"Menachot" = "";
+"Chullin" = "";
+"Bechorot" = "";
+"Arachin" = "";
+"Temurah" = "";
+"Keritot" = "";
+"Meilah" = "";
+"Kinnim" = "";
+"Tamid" = "";
+"Midot" = "";
+"Niddah" = "";
+"Daf Yomi: %s %d" = "Daf Yomi: %s %d";
+"Daf Yomi" = "";
+"Parashat" = "Parsza";
+"Achrei Mot" = "Achare Mot";
+"Balak" = "";
+"Bamidbar" = "";
+"Bechukotai" = "Bechukotai";
+"Beha'alotcha" = "Behaalotcha";
+"Behar" = "";
+"Bereshit" = "Bereszit";
+"Beshalach" = "Beszalach";
+"Bo" = "";
+"Chayei Sara" = "Chaje Sara";
+"Chukat" = "";
+"Devarim" = "Dewarim";
+"Eikev" = "Ekew";
+"Emor" = "";
+"Ha'Azinu" = "Haazinu";
+"Kedoshim" = "Kedoszim";
+"Ki Tavo" = "Ki Tawo";
+"Ki Teitzei" = "Ki Tece";
+"Ki Tisa" = "";
+"Korach" = "";
+"Lech-Lecha" = "Lech Lecha";
+"Masei" = "Mase";
+"Matot" = "";
+"Metzora" = "Mecora";
+"Miketz" = "Mikec";
+"Mishpatim" = "Miszpatim";
+"Nasso" = "Naso";
+"Nitzavim" = "Nicawim";
+"Noach" = "";
+"Pekudei" = "Pekude";
+"Pinchas" = "";
+"Re'eh" = "Ree";
+"Sh'lach" = "Szelach";
+"Shemot" = "Szemot";
+"Shmini" = "Szemini";
+"Shoftim" = "Szoftim";
+"Tazria" = "Tazrija";
+"Terumah" = "Teruma";
+"Tetzaveh" = "Tecawe";
+"Toldot" = "";
+"Tzav" = "Caw";
+"Vaera" = "Waera";
+"Vaetchanan" = "Waetchanan";
+"Vayakhel" = "Waejlech";
+"Vayechi" = "Wajechi";
+"Vayeilech" = "Waejlech";
+"Vayera" = "Wajera";
+"Vayeshev" = "Wajeszew";
+"Vayetzei" = "Wajece";
+"Vayigash" = "Wajigasz";
+"Vayikra" = "Wajikra";
+"Vayishlach" = "Waiszlach";
+"Vezot Haberakhah" = "Wezor Habracha";
+"Yitro" = "Jitro";
+"Asara B'Tevet" = "Asara B'Tevet";
+"Candle lighting" = "Zapalenie świec";
+"Chanukah" = "Chanuka";
+"Chanukah: 1 Candle" = "Chanuka: Pierwsza świeca";
+"Chanukah: 2 Candles" = "Chanuka: Druga świeca";
+"Chanukah: 3 Candles" = "Chanuka: Trzecia świeca";
+"Chanukah: 4 Candles" = "Chanuka: Czwarta świeca";
+"Chanukah: 5 Candles" = "Chanuka: Piąta świeca";
+"Chanukah: 6 Candles" = "Chanuka: Szósta świeca";
+"Chanukah: 7 Candles" = "Chanuka: Siódma świeca";
+"Chanukah: 8 Candles" = "Chanuka: Ósma świeca";
+"Chanukah: 8th Day" = "Chanuka: Dzień ósmy";
+"Days of the Omer" = "Dni Omeru";
+"Omer" = "";
+"day of the Omer" = "";
+"Erev Pesach" = "Erew Pesach";
+"Erev Purim" = "Erew Purim";
+"Erev Rosh Hashana" = "Erew Rosz Haszana";
+"Erev Shavuot" = "Erew Szawuot";
+"Erev Simchat Torah" = "Erew Simchat Tora";
+"Erev Sukkot" = "Erew Sukkot";
+"Erev Tish'a B'Av" = "";
+"Erev Yom Kippur" = "Erew Jom Kippur";
+"Havdalah" = "Hawdala";
+"Lag BaOmer" = "";
+"Leil Selichot" = "";
+"Pesach" = "";
+"Pesach I" = "";
+"Pesach II" = "";
+"Pesach II (CH''M)" = "";
+"Pesach III (CH''M)" = "";
+"Pesach IV (CH''M)" = "";
+"Pesach Sheni" = "";
+"Pesach V (CH''M)" = "";
+"Pesach VI (CH''M)" = "";
+"Pesach VII" = "";
+"Pesach VIII" = "";
+"Purim" = "";
+"Purim Katan" = "";
+"Rosh Chodesh %s" = "Rosz Chodesz %s";
+"Rosh Chodesh" = "Rosz Chodesz";
+"Adar" = "";
+"Adar I" = "";
+"Adar II" = "";
+"Av" = "";
+"Cheshvan" = "";
+"Elul" = "";
+"Iyyar" = "";
+"Kislev" = "";
+"Nisan" = "";
+"Sh'vat" = "";
+"Sivan" = "";
+"Tamuz" = "";
+"Tevet" = "";
+"Tishrei" = "";
+"Rosh Hashana" = "rosz Haszana";
+"Rosh Hashana I" = "Rosz Haszana I";
+"Rosh Hashana II" = "Rosz Haszana II";
+"Shabbat Chazon" = "Szabbat Chazon";
+"Shabbat HaChodesh" = "Szabbat HaChodesz";
+"Shabbat HaGadol" = "Szabbat HaGadol";
+"Shabbat Machar Chodesh" = "Szabbat Machar Chodesz";
+"Shabbat Nachamu" = "Szabbat Nachamu";
+"Shabbat Parah" = "Szabbat Parah";
+"Shabbat Rosh Chodesh" = "Szabbat Rosz Chodesz";
+"Shabbat Shekalim" = "Szabbat Szekalim";
+"Shabbat Shuva" = "Szabbat Szuva";
+"Shabbat Zachor" = "Szabbat Zachor";
+"Shavuot" = "Szawuot";
+"Shavuot I" = "Szawuot I";
+"Shavuot II" = "Szawuot II";
+"Shmini Atzeret" = "Szmini Aceret";
+"Shushan Purim" = "Szuszan Purim";
+"Sigd" = "";
+"Simchat Torah" = "";
+"Sukkot" = "";
+"Sukkot I" = "";
+"Sukkot II" = "";
+"Sukkot II (CH''M)" = "";
+"Sukkot III (CH''M)" = "";
+"Sukkot IV (CH''M)" = "";
+"Sukkot V (CH''M)" = "";
+"Sukkot VI (CH''M)" = "";
+"Sukkot VII (Hoshana Raba)" = "Sukkot VII (Hoszana Raba)";
+"Ta'anit Bechorot" = "Post Bechorot";
+"Ta'anit Esther" = "Post Esther";
+"Tish'a B'Av" = "";
+"Tu B'Av" = "";
+"Tu BiShvat" = "";
+"Tu B'Shvat" = "";
+"Tzom Gedaliah" = "";
+"Tzom Tammuz" = "";
+"Yom HaAtzma'ut" = "Jom HaAtzma'ut";
+"Yom HaShoah" = "Jom HaShoah";
+"Yom HaZikaron" = "Jom HaZikaron";
+"Yom Kippur" = "Jom Kippur";
+"Yom Yerushalayim" = "Jom Yerushalayim";
+"Yom HaAliyah" = "";
+"Yom HaAliyah School Observance" = "";
+"Pesach I (on Shabbat)" = "";
+"Pesach Chol ha-Moed Day 1" = "";
+"Pesach Chol ha-Moed Day 2" = "";
+"Pesach Chol ha-Moed Day 3" = "";
+"Pesach Chol ha-Moed Day 4" = "";
+"Pesach Chol ha-Moed Day 5" = "";
+"Pesach Shabbat Chol ha-Moed" = "";
+"Shavuot II (on Shabbat)" = "";
+"Rosh Hashana I (on Shabbat)" = "";
+"Yom Kippur (on Shabbat)" = "";
+"Yom Kippur (Mincha, Traditional)" = "";
+"Yom Kippur (Mincha, Alternate)" = "";
+"Sukkot I (on Shabbat)" = "";
+"Sukkot Chol ha-Moed Day 1" = "";
+"Sukkot Chol ha-Moed Day 2" = "";
+"Sukkot Chol ha-Moed Day 3" = "";
+"Sukkot Chol ha-Moed Day 4" = "";
+"Sukkot Shabbat Chol ha-Moed" = "";
+"Sukkot Final Day (Hoshana Raba)" = "";
+"Rosh Chodesh Adar" = "";
+"Rosh Chodesh Adar I" = "";
+"Rosh Chodesh Adar II" = "";
+"Rosh Chodesh Av" = "";
+"Rosh Chodesh Cheshvan" = "";
+"Rosh Chodesh Elul" = "";
+"Rosh Chodesh Iyyar" = "";
+"Rosh Chodesh Kislev" = "";
+"Rosh Chodesh Nisan" = "";
+"Rosh Chodesh Sh'vat" = "";
+"Rosh Chodesh Sivan" = "";
+"Rosh Chodesh Tamuz" = "";
+"Rosh Chodesh Tevet" = "";
+"min" = "minut";
+"Fast begins" = "Czczo zaczyna";
+"Fast ends" = "Czczo końce";
+"Rosh Hashana LaBehemot" = "";
+"Tish'a B'Av (observed)" = "";
+"Shabbat Mevarchim Chodesh" = "";
+"Shabbat Shirah" = "";
+
+/*midnight (sunset + six halachic hours)*/
+"chatzotNight" = "";
+
+/*Dawn*/
+"alotHaShachar" = "";
+
+/*Earliest talis & tefillin 11.5 degrees*/
+"misheyakir" = "";
+
+/*Earliest talis & tefillin 10.2 degrees*/
+"misheyakirMachmir" = "";
+
+/*sunrise*/
+"neitzHaChama" = "";
+
+/*Latest shema Gra*/
+"sofZmanShma" = "";
+
+/*Latest shachris Gra*/
+"sofZmanTfilla" = "";
+
+/*Midday (sunrise + six halachic hours)*/
+"chatzot" = "";
+
+/*Earliest mincha*/
+"minchaGedola" = "";
+
+/*Preferable earliest time to recite Minchah*/
+"minchaKetana" = "";
+"plagHaMincha" = "";
+
+/*sunset*/
+"shkiah" = "";
+
+/*Nightfall - 3 stars emerge*/
+"tzeit" = "";
+
+/*Chesed*/
+"Lovingkindness" = "";
+
+/*Gevurah*/
+"Might" = "";
+
+/*Tiferet*/
+"Beauty" = "";
+
+/*Netzach*/
+"Eternity" = "";
+
+/*Hod*/
+"Splendor" = "";
+
+/*Yesod*/
+"Foundation" = "";
+
+/*Malkhut*/
+"Majesty" = "";
+"Unable to allocate memory for holiday." = "";
+"input file read error. Skipping line %s" = "";
+"Error in input file.  Skipping line %s" = "";
+"Numeric hebrew month in input file.  Skipping line %s" = "";
+"Unrecognized hebrew month in input file.  Skipping line %s" = "";
+"Date out of range in input file. Skipping line %s" = "";
+"yahrtzeit file read error. Skipping line %s" = "";
+"Error in yahrtzeit file.  Skipping line %s" = "";
+"Non-numeric month in yahrtzeit file. Skipping line %s" = "";
+"Date out of range in yahrtzeit file. Skipping line %s" = "";
+"improper sedra year type calculated." = "";
