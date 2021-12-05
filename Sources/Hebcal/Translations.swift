@@ -9,6 +9,10 @@ public enum TranslationLang: Int, CaseIterable, Codable {
     case en = 0, ashkenazi = 1, he = 2, heNikud = 3
 }
 
+public func lookupTranslation2(str: String) -> String {
+    return Bundle.main.localizedString(forKey: str, value: nil, table: nil)
+}
+
 public func lookupTranslation(str: String, lang: TranslationLang) -> String {
     switch lang {
     case .en:
@@ -53,6 +57,7 @@ let ashkenaziTranslations = [
     "Matot": "Matos",
     "Purim Katan": "Purim Koton",
     "Tazria": "Sazria",
+    "Tevet": "Teves",
     "Shabbat Chazon": "Shabbos Chazon",
     "Shabbat HaChodesh": "Shabbos HaChodesh",
     "Shabbat HaGadol": "Shabbos HaGadol",

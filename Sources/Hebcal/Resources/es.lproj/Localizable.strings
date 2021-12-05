@@ -192,13 +192,13 @@
 "Yom Kippur" = "Yom Kippur";
 "Yom Yerushalayim" = "Yom Yerushalayim";
 "Yom HaAliyah" = "Yom Yerushalayim";
-"Yom HaAliyah School Observance" = "";
+/* "Yom HaAliyah School Observance" = ""; */
 "Pesach I (on Shabbat)" = "Pésaj I (en Shabat)";
 "Pesach Chol ha-Moed Day 1" = "Pésaj Jol ha-Moed Día 1";
 "Pesach Chol ha-Moed Day 2" = "Pésaj Jol ha-Moed Día 2";
 "Pesach Chol ha-Moed Day 3" = "Pésaj Jol ha-Moed Día 3";
 "Pesach Chol ha-Moed Day 4" = "Pésaj Jol ha-Moed Día 4";
-"Pesach Chol ha-Moed Day 5" = "";
+/* "Pesach Chol ha-Moed Day 5" = ""; */
 "Pesach Shabbat Chol ha-Moed" = "Pésaj Shabat Jol ha-Moed";
 "Shavuot II (on Shabbat)" = "Shavuot II (en Shabat)";
 "Rosh Hashana I (on Shabbat)" = "Rosh Hashana I (en Shabat)";
@@ -228,68 +228,68 @@
 "min" = "min";
 "Fast begins" = "El ayuno comienza";
 "Fast ends" = "El ayuno finaliza";
-"Rosh Hashana LaBehemot" = "";
+/* "Rosh Hashana LaBehemot" = ""; */
 "Tish'a B'Av (observed)" = "Tish'a B'Av (observado)";
-"Shabbat Mevarchim Chodesh" = "";
-"Shabbat Shirah" = "";
+/* "Shabbat Mevarchim Chodesh" = ""; */
+/* "Shabbat Shirah" = ""; */
 
 /*midnight (sunset + six halachic hours)*/
-"chatzotNight" = "";
+/* "chatzotNight" = ""; */
 
 /*Dawn*/
-"alotHaShachar" = "";
+/* "alotHaShachar" = ""; */
 
 /*Earliest talis & tefillin 11.5 degrees*/
-"misheyakir" = "";
+/* "misheyakir" = ""; */
 
 /*Earliest talis & tefillin 10.2 degrees*/
-"misheyakirMachmir" = "";
+/* "misheyakirMachmir" = ""; */
 
 /*sunrise*/
-"neitzHaChama" = "";
+/* "neitzHaChama" = ""; */
 
 /*Latest shema Gra*/
-"sofZmanShma" = "";
+/* "sofZmanShma" = ""; */
 
 /*Latest shachris Gra*/
-"sofZmanTfilla" = "";
+/* "sofZmanTfilla" = ""; */
 
 /*Midday (sunrise + six halachic hours)*/
-"chatzot" = "";
+/* "chatzot" = ""; */
 
 /*Earliest mincha*/
-"minchaGedola" = "";
+/* "minchaGedola" = ""; */
 
 /*Preferable earliest time to recite Minchah*/
-"minchaKetana" = "";
-"plagHaMincha" = "";
+/* "minchaKetana" = ""; */
+/* "plagHaMincha" = ""; */
 
 /*sunset*/
-"shkiah" = "";
+/* "shkiah" = ""; */
 
 /*Nightfall - 3 stars emerge*/
-"tzeit" = "";
+/* "tzeit" = ""; */
 
 /*Chesed*/
-"Lovingkindness" = "";
+/* "Lovingkindness" = ""; */
 
 /*Gevurah*/
-"Might" = "";
+/* "Might" = ""; */
 
 /*Tiferet*/
-"Beauty" = "";
+/* "Beauty" = ""; */
 
 /*Netzach*/
-"Eternity" = "";
+/* "Eternity" = ""; */
 
 /*Hod*/
-"Splendor" = "";
+/* "Splendor" = ""; */
 
 /*Yesod*/
-"Foundation" = "";
+/* "Foundation" = ""; */
 
 /*Malkhut*/
-"Majesty" = "";
+/* "Majesty" = ""; */
 "Unable to allocate memory for holiday." = "No se puede asignar memoria para las vacaciones.";
 "input file read error. Skipping line %s" = "error de lectura del archivo de entrada. Saltando la línea %s";
 "Error in input file.  Skipping line %s" = "Error en el archivo de entrada. Saltando la línea %s";

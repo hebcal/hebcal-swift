@@ -107,8 +107,8 @@
 "Chanukah: 8 Candles" = "Chánuká: 8 gyertya";
 "Chanukah: 8th Day" = "Chánuká: 8. nap";
 "Days of the Omer" = "Az omer napjai";
-"Omer" = "";
-"day of the Omer" = "";
+/* "Omer" = ""; */
+/* "day of the Omer" = ""; */
 "Erev Pesach" = "Erev Peszách";
 "Erev Purim" = "Erev Purim";
 "Erev Rosh Hashana" = "Erev Ros hásáná";
@@ -148,7 +148,7 @@
 "Sivan" = "Sziván";
 "Tamuz" = "Támuz";
 "Tevet" = "Tévét";
-"Tishrei" = "";
+/* "Tishrei" = ""; */
 "Rosh Hashana" = "Ros hásáná";
 "Rosh Hashana I" = "Ros hásáná I";
 "Rosh Hashana II" = "Ros hásáná II";
@@ -192,105 +192,105 @@
 "Yom Kippur" = "Jom kipur";
 "Yom Yerushalayim" = "Jom Jerusáláim";
 "Yom HaAliyah" = "Jom háAlija";
-"Yom HaAliyah School Observance" = "";
-"Pesach I (on Shabbat)" = "";
-"Pesach Chol ha-Moed Day 1" = "";
-"Pesach Chol ha-Moed Day 2" = "";
-"Pesach Chol ha-Moed Day 3" = "";
-"Pesach Chol ha-Moed Day 4" = "";
-"Pesach Chol ha-Moed Day 5" = "";
-"Pesach Shabbat Chol ha-Moed" = "";
-"Shavuot II (on Shabbat)" = "";
-"Rosh Hashana I (on Shabbat)" = "";
-"Yom Kippur (on Shabbat)" = "";
-"Yom Kippur (Mincha, Traditional)" = "";
-"Yom Kippur (Mincha, Alternate)" = "";
-"Sukkot I (on Shabbat)" = "";
-"Sukkot Chol ha-Moed Day 1" = "";
-"Sukkot Chol ha-Moed Day 2" = "";
-"Sukkot Chol ha-Moed Day 3" = "";
-"Sukkot Chol ha-Moed Day 4" = "";
-"Sukkot Shabbat Chol ha-Moed" = "";
-"Sukkot Final Day (Hoshana Raba)" = "";
-"Rosh Chodesh Adar" = "";
-"Rosh Chodesh Adar I" = "";
-"Rosh Chodesh Adar II" = "";
-"Rosh Chodesh Av" = "";
-"Rosh Chodesh Cheshvan" = "";
-"Rosh Chodesh Elul" = "";
-"Rosh Chodesh Iyyar" = "";
-"Rosh Chodesh Kislev" = "";
-"Rosh Chodesh Nisan" = "";
-"Rosh Chodesh Sh'vat" = "";
-"Rosh Chodesh Sivan" = "";
-"Rosh Chodesh Tamuz" = "";
-"Rosh Chodesh Tevet" = "";
+/* "Yom HaAliyah School Observance" = ""; */
+/* "Pesach I (on Shabbat)" = ""; */
+/* "Pesach Chol ha-Moed Day 1" = ""; */
+/* "Pesach Chol ha-Moed Day 2" = ""; */
+/* "Pesach Chol ha-Moed Day 3" = ""; */
+/* "Pesach Chol ha-Moed Day 4" = ""; */
+/* "Pesach Chol ha-Moed Day 5" = ""; */
+/* "Pesach Shabbat Chol ha-Moed" = ""; */
+/* "Shavuot II (on Shabbat)" = ""; */
+/* "Rosh Hashana I (on Shabbat)" = ""; */
+/* "Yom Kippur (on Shabbat)" = ""; */
+/* "Yom Kippur (Mincha, Traditional)" = ""; */
+/* "Yom Kippur (Mincha, Alternate)" = ""; */
+/* "Sukkot I (on Shabbat)" = ""; */
+/* "Sukkot Chol ha-Moed Day 1" = ""; */
+/* "Sukkot Chol ha-Moed Day 2" = ""; */
+/* "Sukkot Chol ha-Moed Day 3" = ""; */
+/* "Sukkot Chol ha-Moed Day 4" = ""; */
+/* "Sukkot Shabbat Chol ha-Moed" = ""; */
+/* "Sukkot Final Day (Hoshana Raba)" = ""; */
+/* "Rosh Chodesh Adar" = ""; */
+/* "Rosh Chodesh Adar I" = ""; */
+/* "Rosh Chodesh Adar II" = ""; */
+/* "Rosh Chodesh Av" = ""; */
+/* "Rosh Chodesh Cheshvan" = ""; */
+/* "Rosh Chodesh Elul" = ""; */
+/* "Rosh Chodesh Iyyar" = ""; */
+/* "Rosh Chodesh Kislev" = ""; */
+/* "Rosh Chodesh Nisan" = ""; */
+/* "Rosh Chodesh Sh'vat" = ""; */
+/* "Rosh Chodesh Sivan" = ""; */
+/* "Rosh Chodesh Tamuz" = ""; */
+/* "Rosh Chodesh Tevet" = ""; */
 "min" = "perc";
 "Fast begins" = "A böjt kezdődik";
 "Fast ends" = "A böjt végét";
-"Rosh Hashana LaBehemot" = "";
+/* "Rosh Hashana LaBehemot" = ""; */
 "Tish'a B'Av (observed)" = "Tisá böÁv (megfigyelt)";
-"Shabbat Mevarchim Chodesh" = "";
-"Shabbat Shirah" = "";
+/* "Shabbat Mevarchim Chodesh" = ""; */
+/* "Shabbat Shirah" = ""; */
 
 /*midnight (sunset + six halachic hours)*/
-"chatzotNight" = "";
+/* "chatzotNight" = ""; */
 
 /*Dawn*/
-"alotHaShachar" = "";
+/* "alotHaShachar" = ""; */
 
 /*Earliest talis & tefillin 11.5 degrees*/
-"misheyakir" = "";
+/* "misheyakir" = ""; */
 
 /*Earliest talis & tefillin 10.2 degrees*/
-"misheyakirMachmir" = "";
+/* "misheyakirMachmir" = ""; */
 
 /*sunrise*/
-"neitzHaChama" = "";
+/* "neitzHaChama" = ""; */
 
 /*Latest shema Gra*/
-"sofZmanShma" = "";
+/* "sofZmanShma" = ""; */
 
 /*Latest shachris Gra*/
-"sofZmanTfilla" = "";
+/* "sofZmanTfilla" = ""; */
 
 /*Midday (sunrise + six halachic hours)*/
-"chatzot" = "";
+/* "chatzot" = ""; */
 
 /*Earliest mincha*/
-"minchaGedola" = "";
+/* "minchaGedola" = ""; */
 
 /*Preferable earliest time to recite Minchah*/
-"minchaKetana" = "";
-"plagHaMincha" = "";
+/* "minchaKetana" = ""; */
+/* "plagHaMincha" = ""; */
 
 /*sunset*/
-"shkiah" = "";
+/* "shkiah" = ""; */
 
 /*Nightfall - 3 stars emerge*/
-"tzeit" = "";
+/* "tzeit" = ""; */
 
 /*Chesed*/
-"Lovingkindness" = "";
+/* "Lovingkindness" = ""; */
 
 /*Gevurah*/
-"Might" = "";
+/* "Might" = ""; */
 
 /*Tiferet*/
-"Beauty" = "";
+/* "Beauty" = ""; */
 
 /*Netzach*/
-"Eternity" = "";
+/* "Eternity" = ""; */
 
 /*Hod*/
-"Splendor" = "";
+/* "Splendor" = ""; */
 
 /*Yesod*/
-"Foundation" = "";
+/* "Foundation" = ""; */
 
 /*Malkhut*/
-"Majesty" = "";
-"Unable to allocate memory for holiday." = "";
+/* "Majesty" = ""; */
+/* "Unable to allocate memory for holiday." = ""; */
 "input file read error. Skipping line %s" = "Olvasási hiba a beviteli fájlban. Sor kihagyása %s";
 "Error in input file.  Skipping line %s" = "Hiba a beviteli fájlban. Sor kihagyása %s";
 "Numeric hebrew month in input file.  Skipping line %s" = "Numerikus héber hónap a beviteli fájlban. Sor kihagyása %s";
