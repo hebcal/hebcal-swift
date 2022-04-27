@@ -48,7 +48,7 @@ public struct HEvent: Comparable {
     public let desc: String
     public let flags: HolidayFlags
     public let emoji: String?
-    init(hdate: HDate, desc: String, flags: HolidayFlags? = .NONE, emoji: String? = nil) {
+    public init(hdate: HDate, desc: String, flags: HolidayFlags? = .NONE, emoji: String? = nil) {
         self.hdate = hdate
         self.desc = desc
         self.flags = flags ?? .NONE
@@ -62,7 +62,7 @@ struct Holiday {
     let desc: String
     let flags: HolidayFlags
     let emoji: String?
-    init(mm: HebrewMonth, dd: Int, desc: String, flags: HolidayFlags? = .NONE, emoji: String? = nil) {
+    public init(mm: HebrewMonth, dd: Int, desc: String, flags: HolidayFlags? = .NONE, emoji: String? = nil) {
         self.mm = mm
         self.dd = dd
         self.desc = desc
