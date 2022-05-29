@@ -78,6 +78,30 @@
             XCTAssertEqual(HDate(absdate: -16), HDate(yy: 3761, mm: .TEVET, dd: 1))
         }
 
+        func testHDateAbs() {
+            XCTAssertEqual(733359, HDate(yy: 5769, mm: .CHESHVAN, dd: 15).abs())
+            XCTAssertEqual(711262, HDate(yy: 5708, mm: .IYYAR, dd: 6).abs())
+            XCTAssertEqual(249, HDate(yy: 3762, mm: .TISHREI, dd: 1).abs())
+            XCTAssertEqual(1, HDate(yy: 3761, mm: .TEVET, dd: 18).abs())
+            XCTAssertEqual(0, HDate(yy: 3761, mm: .TEVET, dd: 17).abs())
+            XCTAssertEqual(-16, HDate(yy: 3761, mm: .TEVET, dd: 1).abs())
+        }
+
+        func testHDateCtor() {
+            let date = Date(timeIntervalSince1970: 1307032496)
+            let hdate = HDate(yy: 5771, mm: .IYYAR, dd: 29)
+            XCTAssertEqual(hdate, HDate(date: date, calendar: .current))
+            XCTAssertEqual(hdate, HDate(date: date, calendar: Calendar(identifier: .gregorian)))
+            XCTAssertEqual(hdate, HDate(date: date, calendar: Calendar(identifier: .iso8601)))
+        }
+
+        func testHDateRender() {
+            let hdate = HDate(yy: 5771, mm: .TEVET, dd: 29)
+            XCTAssertEqual("29 Tevet 5771", hdate.render(lang: .en))
+            XCTAssertEqual("29 Teves 5771", hdate.render(lang: .ashkenazi))
+            XCTAssertEqual("כ״ט טבת תשע״א", hdate.render(lang: .he))
+        }
+
         func testlookupTranslation() {
             XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.en), "Noach")
             XCTAssertEqual(lookupTranslation(str: "Noach", lang: TranslationLang.ashkenazi), "Noach")

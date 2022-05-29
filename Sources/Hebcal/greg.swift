@@ -15,8 +15,6 @@ let monthLengths = [
     [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
 ]
 
-let gregCalendar = Calendar(identifier: .gregorian)
-
 public func isGregLeapYear(year: Int) -> Bool {
     return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)
 }
@@ -38,12 +36,16 @@ public func dayOfYear(dateComponents: DateComponents) -> Int {
     return days
 }
 
+public func greg2abs(date: Date) -> Int64 {
+    return greg2abs(date: date, calendar: .current)
+}
+
 /*
  * The number of days elapsed between the Gregorian date 12/31/1 BC and DATE.
  * The Gregorian date Sunday, December 31, 1 BC is imaginary.
  */
-public func greg2abs(date: Date) -> Int64 {
-    let ymd = gregCalendar.dateComponents([.year, .month, .day], from: date)
+public func greg2abs(date: Date, calendar: Calendar) -> Int64 {
+    let ymd = calendar.dateComponents([.year, .month, .day], from: date)
     let year = Int64(ymd.year! - 1)
     let days = Int64(dayOfYear(dateComponents: ymd))
     return days +   /* days this year */
@@ -59,7 +61,7 @@ public func greg2abs(date: Date) -> Int64 {
  * Clamen, Software--Practice and Experience, Volume 23, Number 4
  * (April, 1993), pages 383-404 for an explanation.
  */
-public func abs2greg(absdate: Int64) -> Date {
+public func abs2greg(absdate: Int64, calendar: Calendar) -> Date {
     let d0 = absdate - 1
     let n400 = d0 / 146097
     let d1 = d0 % 146097
@@ -68,12 +70,13 @@ public func abs2greg(absdate: Int64) -> Date {
     let n4 = d2 / 1461
     let d3 = d2 % 1461
     let n1 = d3 / 365
-    
+
     var day = Int((d3 % 365) + 1)
     var year = Int(400 * n400 + 100 * n100 + 4 * n4 + n1)
-    
+
     if 4 == n100 || 4 == n1 {
-        return DateComponents(calendar: gregCalendar, year: year, month: DEC, day: 31).date!
+        return DateComponents(calendar: calendar, year: year,
+                              month: DEC, day: 31).date!
     } else {
         year = year + 1
         var month = 1
@@ -81,6 +84,7 @@ public func abs2greg(absdate: Int64) -> Date {
             day -= mlen
             month = month + 1
         }
-        return DateComponents(calendar: gregCalendar, year: year, month: month, day: day).date!
+        return DateComponents(calendar: calendar, year: year,
+                              month: month, day: day).date!
     }
 }

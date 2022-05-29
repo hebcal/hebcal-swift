@@ -158,19 +158,8 @@ public func hebrew2abs(year: Int, month: HebrewMonth, day: Int) -> Int64 {
     return EPOCH + elapsedDays(year: year) + tempabs - 1
 }
 
-func newYearDelay(year: Int) -> Int {
-    let ny1 = elapsedDays(year: year)
-    let ny2 = elapsedDays(year: year + 1)
-    if ny2 - ny1 == 356 {
-        return 2
-    } else {
-        let ny0 = elapsedDays(year: year - 1)
-        return ny1 - ny0 == 382 ? 1 : 0
-    }
-}
-
 func newYear(year: Int) -> Int64 {
-    return EPOCH + elapsedDays(year: year) + Int64(newYearDelay(year: year))
+    return EPOCH + elapsedDays(year: year)
 }
 
 public class HDate: Comparable {
@@ -197,8 +186,8 @@ public class HDate: Comparable {
         self.dd = dd
     }
 
-    public convenience init(date: Date) {
-        self.init(absdate: greg2abs(date: date))
+    public convenience init(date: Date, calendar: Calendar) {
+        self.init(absdate: greg2abs(date: date, calendar: calendar))
     }
 
     public init(absdate: Int64) {
@@ -227,7 +216,7 @@ public class HDate: Comparable {
     }
 
     public func greg() -> Date {
-        return abs2greg(absdate: self.abs())
+        return abs2greg(absdate: self.abs(), calendar: .current)
     }
 
     public func dow() -> DayOfWeek {
@@ -260,18 +249,6 @@ public class HDate: Comparable {
             return isLeapYear(year: self.yy) ? "Adar I" : "Adar"
         case .ADAR_II:
             return "Adar II"
-        }
-    }
-
-    public func render(lang: TranslationLang?) -> String {
-        let monthName = self.monthName()
-        let language = lang ?? TranslationLang.en
-        if language == .he {
-            return hebnumToString(number: self.dd) + " " +
-                lookupTranslation(str: monthName, lang: language) + " " +
-                hebnumToString(number: self.yy)
-        } else {
-            return String(self.dd) + " " + monthName + " " + String(self.yy)
         }
     }
 }

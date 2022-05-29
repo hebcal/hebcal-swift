@@ -312,3 +312,17 @@ let parshaNikud = [
     "Vezot Haberakhah": "וְזֹאת הַבְּרָכָה",
     "Yitro": "יִתְרוֹ",
 ]
+
+extension HDate {
+    public func render(lang: TranslationLang?) -> String {
+        let language = lang ?? TranslationLang.en
+        let monthName = lookupTranslation(str: self.monthName(), lang: language)
+        if language == .he {
+            return hebnumToString(number: self.dd) + " " +
+                monthName + " " +
+                hebnumToString(number: self.yy)
+        } else {
+            return String(self.dd) + " " + monthName + " " + String(self.yy)
+        }
+    }
+}
