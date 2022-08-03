@@ -14,7 +14,7 @@ let nsday = greg2abs(date: nsdate)
 
 public struct Daf: Equatable {
     public let name: String
-    public var blatt: Int
+    public let blatt: Int
     public init(name: String, blatt: Int) {
         self.name = name
         self.blatt = blatt
@@ -92,9 +92,7 @@ public func dafYomi(date: Date) throws -> Daf {
     var shas = shas0
     // Fix Shekalim for old cycles
     if (cno <= 7) {
-      shas[4].blatt = 13
-    } else {
-      shas[4].blatt = 22
+        shas[4] = Daf(name: "Shekalim", blatt: 13)
     }
 
     // Find the daf
