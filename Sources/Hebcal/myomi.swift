@@ -82,15 +82,17 @@ let mishnaYomiStart = greg2abs(date: cycleStartDate)
 let numMishnayot = 4192
 let numDays = numMishnayot / 2
 
-public struct Page : Equatable {
+public struct Mishna : Equatable {
     let k: String
     let v: String
 }
 
+let dummy = Mishna(k: "dummy", v: "dummy")
+
 public class MishnaYomiIndex {
-    var days: [[Page]] = Array(repeating: [], count: numDays)
+    var days: [(Mishna, Mishna)] = Array(repeating: (dummy, dummy), count: numDays)
     public init() {
-        var tmp = [Page]()
+        var tmp = [Mishna]()
         for tractate in mishnayot {
             var chap = 1
             while chap <= tractate.v.count {
@@ -98,21 +100,21 @@ public class MishnaYomiIndex {
                 var verse = 1
                 while verse <= numv {
                     let chapVerse = String(chap) + ":" + String(verse)
-                    tmp.append(Page(k: tractate.k, v: chapVerse))
-                    verse = verse + 1
+                    tmp.append(Mishna(k: tractate.k, v: chapVerse))
+                    verse += 1
                 }
-                chap = chap + 1
+                chap += 1
             }
         }
         var j = 0
         while j < numDays {
             let k = j * 2
-            days[j] = [tmp[k], tmp[k + 1]]
-            j = j + 1
+            days[j] = (tmp[k], tmp[k + 1])
+            j += 1
         }
     }
 
-    public func lookup(date: Date) -> [Page] {
+    public func lookup(date: Date) -> (Mishna, Mishna) {
         let abs = greg2abs(date: date)
         let dayNum = Int(abs - mishnaYomiStart) % numDays
         return days[dayNum]
