@@ -12,9 +12,13 @@ let nsdate0 = DateComponents(year: 1975, month: 6, day: 24)
 let nsdate = Calendar.current.date(from: nsdate0)!
 let nsday = greg2abs(date: nsdate)
 
-public struct Daf : Equatable {
-    let name: String
-    var blatt: Int
+public struct Daf: Equatable {
+    public let name: String
+    public var blatt: Int
+    public init(name: String, blatt: Int) {
+        self.name = name
+        self.blatt = blatt
+    }
 }
 
 let shas0: [Daf] = [

@@ -82,9 +82,13 @@ let mishnaYomiStart = greg2abs(date: cycleStartDate)
 let numMishnayot = 4192
 let numDays = numMishnayot / 2
 
-public struct Mishna : Equatable {
-    let k: String
-    let v: String
+public struct Mishna: Equatable {
+    public let k: String
+    public let v: String
+    public init(k: String, v: String) {
+        self.k = k
+        self.v = v
+    }
 }
 
 let dummy = Mishna(k: "dummy", v: "dummy")
