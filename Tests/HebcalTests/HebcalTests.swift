@@ -359,4 +359,28 @@
                 XCTAssertEqual(actual[i], expected[i])
             }
         }
+        func testMishnaYomi() {
+            let index = MishnaYomiIndex()
+            let calendar = Calendar.current
+
+            let day1 = calendar.date(from: DateComponents(year: 1947, month: 5, day: 20))!
+            print(day1)
+            let day7 = calendar.date(from: DateComponents(year: 1947, month: 5, day: 26))!
+            let day10 = calendar.date(from: DateComponents(year: 1947, month: 5, day: 29))!
+
+            let my1 = index.lookup(date: day1)
+            XCTAssertEqual(my1, [Page(k: "Berakhot", v: "1:1"), Page(k: "Berakhot", v: "1:2")])
+            let my7 = index.lookup(date: day7)
+            XCTAssertEqual(my7, [Page(k: "Berakhot", v: "2:8"), Page(k: "Berakhot", v: "3:1")])
+            let my10 = index.lookup(date: day10)
+            XCTAssertEqual(my10, [Page(k: "Berakhot", v: "3:6"), Page(k: "Berakhot", v: "4:1")])
+
+            let day2022 = calendar.date(from: DateComponents(year: 2022, month: 8, day: 1))!
+            let my2022 = index.lookup(date: day2022)
+            XCTAssertEqual(my2022, [Page(k: "Terumot", v: "11:3"), Page(k: "Terumot", v: "11:4")])
+
+            let day2024 = calendar.date(from: DateComponents(year: 2024, month: 4, day: 5))!
+            let my2024 = index.lookup(date: day2024)
+            XCTAssertEqual(my2024, [Page(k: "Nedarim", v: "11:12"), Page(k: "Nazir", v: "1:1")])
+        }
     }
