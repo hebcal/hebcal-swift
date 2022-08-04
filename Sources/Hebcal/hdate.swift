@@ -162,7 +162,7 @@ func newYear(year: Int) -> Int64 {
     return EPOCH + elapsedDays(year: year)
 }
 
-public class HDate: Comparable {
+public class HDate: Comparable, Hashable, Codable, Identifiable {
     public static func < (lhs: HDate, rhs: HDate) -> Bool {
         if lhs.yy != rhs.yy {
             return lhs.yy < rhs.yy
@@ -173,6 +173,12 @@ public class HDate: Comparable {
 
     public static func == (lhs: HDate, rhs: HDate) -> Bool {
         return lhs.yy == rhs.yy && lhs.mm == rhs.mm && lhs.dd == rhs.dd
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(yy)
+        hasher.combine(mm)
+        hasher.combine(dd)
     }
 
     public let yy: Int
