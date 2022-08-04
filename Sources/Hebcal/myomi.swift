@@ -10,7 +10,7 @@ struct MishnaYomi {
 }
 
 let mishnayot: [MishnaYomi] = [
-  MishnaYomi(k:"Berakhot", v: [5,8,6,7,5,8,5,8,5]),
+  MishnaYomi(k: "Berakhot", v: [5,8,6,7,5,8,5,8,5]),
   MishnaYomi(k: "Peah", v: [6,8,8,11,8,11,8,9]),
   MishnaYomi(k: "Demai", v: [4,5,6,7,11,12,8]),
   MishnaYomi(k: "Kilayim", v: [9,11,7,9,8,9,8,6,10]),
@@ -83,15 +83,17 @@ let numMishnayot = 4192
 let numDays = numMishnayot / 2
 
 public struct Mishna: Equatable {
-    public let k: String
-    public let v: String
-    public init(k: String, v: String) {
-        self.k = k
-        self.v = v
+    public let tractate: String
+    public let chap: Int
+    public let verse: Int
+    public init(tractate: String, chap: Int, verse: Int) {
+        self.tractate = tractate
+        self.chap = chap
+        self.verse = verse
     }
 }
 
-let dummy = Mishna(k: "dummy", v: "dummy")
+let dummy = Mishna(tractate: "x", chap: 0, verse: 0)
 
 public class MishnaYomiIndex {
     var days: [(Mishna, Mishna)] = Array(repeating: (dummy, dummy), count: numDays)
@@ -103,8 +105,7 @@ public class MishnaYomiIndex {
                 let numv = tractate.v[chap - 1]
                 var verse = 1
                 while verse <= numv {
-                    let chapVerse = String(chap) + ":" + String(verse)
-                    tmp.append(Mishna(k: tractate.k, v: chapVerse))
+                    tmp.append(Mishna(tractate: tractate.k, chap: chap, verse: verse))
                     verse += 1
                 }
                 chap += 1
@@ -123,4 +124,18 @@ public class MishnaYomiIndex {
         let dayNum = Int(abs - mishnaYomiStart) % numDays
         return days[dayNum]
     }
+}
+
+public func formatMishnaYomi(pair: (Mishna, Mishna)) -> String {
+    var s = pair.0.tractate + " " + String(pair.0.chap) + ":" + String(pair.0.verse) + "-"
+    let sameTractate = pair.1.tractate == pair.0.tractate
+    if (!sameTractate) {
+        s += pair.1.tractate + " "
+    }
+    if (sameTractate && pair.1.chap == pair.0.chap) {
+        s += String(pair.1.verse)
+    } else {
+        s += String(pair.1.chap) + ":" + String(pair.1.verse)
+    }
+    return s
 }
