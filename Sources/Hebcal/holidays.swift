@@ -165,6 +165,66 @@ let staticHolidays: [Holiday] = [
             flags: [.EREV, .LIGHT_CANDLES], emoji: "🍏🍯"),
 ]
 
+
+struct ModernHoliday {
+    let h: Holiday
+    let firstYear: Int
+    let chul: Bool
+    let suppressEmoji: Bool
+    let satPostponeToSun: Bool
+    let friPostponeToSun: Bool
+}
+
+
+let staticModernHolidays: [ModernHoliday] = [
+    ModernHoliday(h: Holiday(mm: .IYYAR, dd: 28, desc: "Yom Yerushalayim"),
+                  firstYear: 5727,
+                  chul: true,
+                  suppressEmoji: false,
+                  satPostponeToSun: false, friPostponeToSun: false),
+    ModernHoliday(h: Holiday(mm: .KISLEV, dd: 6, desc: "Ben-Gurion Day"),
+                  firstYear: 5737,
+                  chul: false,
+                  suppressEmoji: false,
+                  satPostponeToSun: true, friPostponeToSun: true),
+    ModernHoliday(h: Holiday(mm: .SHVAT, dd: 30, desc: "Family Day"),
+                  firstYear: 5750,
+                  chul: false,
+                  suppressEmoji: true,
+                  satPostponeToSun: false, friPostponeToSun: false),
+    ModernHoliday(h: Holiday(mm: .CHESHVAN, dd: 12, desc: "Yitzhak Rabin Memorial Day"),
+                  firstYear: 5758,
+                  chul: false,
+                  suppressEmoji: false,
+                  satPostponeToSun: false, friPostponeToSun: false),
+    ModernHoliday(h: Holiday(mm: .IYYAR, dd: 10, desc: "Herzl Day"),
+                  firstYear: 5764,
+                  chul: false,
+                  suppressEmoji: false,
+                  satPostponeToSun: true, friPostponeToSun: false),
+    ModernHoliday(h: Holiday(mm: .TAMUZ, dd: 29, desc: "Jabotinsky Day"),
+                  firstYear: 5765,
+                  chul: false,
+                  suppressEmoji: false,
+                  satPostponeToSun: true, friPostponeToSun: false),
+    ModernHoliday(h: Holiday(mm: .CHESHVAN, dd: 29, desc: "Sigd"),
+                  firstYear: 5769,
+                  chul: true,
+                  suppressEmoji: true,
+                  satPostponeToSun: false, friPostponeToSun: false),
+    ModernHoliday(h: Holiday(mm: .NISAN, dd: 10, desc: "Yom HaAliyah"),
+                  firstYear: 5777,
+                  chul: true,
+                  suppressEmoji: false,
+                  satPostponeToSun: false, friPostponeToSun: false),
+    ModernHoliday(h: Holiday(mm: .CHESHVAN, dd: 7, desc: "Yom HaAliyah School Observance"),
+                  firstYear: 5777,
+                  chul: false,
+                  suppressEmoji: false,
+                  satPostponeToSun: false, friPostponeToSun: false),
+]
+
+
 public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
     let events = getAllHolidaysForYear(year: year)
     let result = events.filter {
@@ -314,24 +374,20 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
         events.append(HEvent(hdate: nisan27dt, desc: "Yom HaShoah", flags: .MODERN_HOLIDAY))
     }
 
-    if year >= 5727 {
-        // Yom Yerushalayim only celebrated after 1967
-        events.append(HEvent(hdate: HDate(yy: year, mm: .IYYAR, dd: 28),
-                             desc: "Yom Yerushalayim", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"))
-    }
-
-    if year >= 5769 {
-        events.append(HEvent(hdate: HDate(yy: year, mm: .CHESHVAN, dd: 29),
-                             desc: "Sigd", flags: .MODERN_HOLIDAY))
-    }
-
-    if year >= 5777 {
-        events.append(contentsOf: [
-            HEvent(hdate: HDate(yy: year, mm: .CHESHVAN, dd: 7),
-                   desc: "Yom HaAliyah School Observance", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"),
-            HEvent(hdate: HDate(yy: year, mm: .NISAN, dd: 10),
-                   desc: "Yom HaAliyah", flags: .MODERN_HOLIDAY, emoji: "🇮🇱"),
-        ])
+    for mh in staticModernHolidays {
+        if year >= mh.firstYear {
+            let h = mh.h
+            let emoji = mh.suppressEmoji ? nil : "🇮🇱"
+            let flags = mh.chul ? HolidayFlags.MODERN_HOLIDAY : [HolidayFlags.MODERN_HOLIDAY, HolidayFlags.IL_ONLY]
+            var hd = HDate(yy: year, mm: h.mm, dd: h.dd)
+            if mh.friPostponeToSun && hd.dow() == .FRI {
+                hd = hd.next().next()
+            }
+            if mh.satPostponeToSun && hd.dow() == .SAT {
+                hd = hd.next()
+            }
+            events.append(HEvent(hdate: hd, desc: h.desc, flags: flags, emoji: emoji))
+        }
     }
 
     // Rosh Chodesh

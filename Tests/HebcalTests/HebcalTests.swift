@@ -67,6 +67,7 @@
             XCTAssertEqual(hebrew2abs(year: 3761, month: .TEVET, day: 17), 0)
             XCTAssertEqual(hebrew2abs(year: 3761, month: .TEVET, day: 16), -1)
             XCTAssertEqual(hebrew2abs(year: 3761, month: .TEVET, day: 1), -16)
+            XCTAssertEqual(hebrew2abs(year: 9999, month: .ELUL, day: 29), 2278650)
         }
 
         func testabs2hebrew() {
@@ -124,18 +125,73 @@
         }
 
         func testAllHolidays() {
-            XCTAssertEqual(getAllHolidaysForYear(year: 5783).count, 101)
+            XCTAssertEqual(getAllHolidaysForYear(year: 5783).count, 106)
         }
 
         func testHolidays() {
             let holidaysDiaspora = getHolidaysForYear(year: 5782, il: false)
-            XCTAssertEqual(holidaysDiaspora.count, 88)
+            XCTAssertEqual(holidaysDiaspora.count, 87)
             let holidaysIL = getHolidaysForYear(year: 5782, il: true)
-            XCTAssertEqual(holidaysIL.count, 85)
-            XCTAssertEqual(getHolidaysForYear(year: 5783, il: false).count, 86)
-            XCTAssertEqual(getHolidaysForYear(year: 5783, il: true).count, 83)
-            XCTAssertEqual(getHolidaysForYear(year: 5784, il: false).count, 87)
-            XCTAssertEqual(getHolidaysForYear(year: 5784, il: true).count, 84)
+            XCTAssertEqual(holidaysIL.count, 90)
+            XCTAssertEqual(getHolidaysForYear(year: 5783, il: false).count, 85)
+            XCTAssertEqual(getHolidaysForYear(year: 5783, il: true).count, 88)
+            XCTAssertEqual(getHolidaysForYear(year: 5784, il: false).count, 86)
+            XCTAssertEqual(getHolidaysForYear(year: 5784, il: true).count, 89)
+        }
+
+        func testModernHolidaysIL() {
+            let holidaysIL = getHolidaysForYear(year: 5783, il: true).filter {
+                $0.flags.contains(.MODERN_HOLIDAY)
+            }
+            var actual = [String]()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            for ev in holidaysIL {
+                let date = dateFormatter.string(from: ev.hdate.greg())
+                actual.append(date + " " + ev.desc)
+            }
+            let expected = [
+                "2022-11-01 Yom HaAliyah School Observance",
+                "2022-11-06 Yitzhak Rabin Memorial Day",
+                "2022-11-23 Sigd",
+                "2022-11-30 Ben-Gurion Day",
+                "2023-02-21 Family Day",
+                "2023-04-01 Yom HaAliyah",
+                "2023-04-18 Yom HaShoah",
+                "2023-04-25 Yom HaZikaron",
+                "2023-04-26 Yom HaAtzma'ut",
+                "2023-05-01 Herzl Day",
+                "2023-05-19 Yom Yerushalayim",
+                "2023-07-18 Jabotinsky Day",
+            ]
+            XCTAssertEqual(actual.count, expected.count)
+            for i in 0...actual.count-1 {
+                XCTAssertEqual(actual[i], expected[i])
+            }
+        }
+        func testModernHolidaysDiaspora() {
+            let holidaysDiaspora = getHolidaysForYear(year: 5783, il: false).filter {
+                $0.flags.contains(.MODERN_HOLIDAY)
+            }
+            var actual = [String]()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            for ev in holidaysDiaspora {
+                let date = dateFormatter.string(from: ev.hdate.greg())
+                actual.append(date + " " + ev.desc)
+            }
+            let expected = [
+                "2022-11-23 Sigd",
+                "2023-04-01 Yom HaAliyah",
+                "2023-04-18 Yom HaShoah",
+                "2023-04-25 Yom HaZikaron",
+                "2023-04-26 Yom HaAtzma'ut",
+                "2023-05-19 Yom Yerushalayim",
+            ]
+            XCTAssertEqual(actual.count, expected.count)
+            for i in 0...actual.count-1 {
+                XCTAssertEqual(actual[i], expected[i])
+            }
         }
 
         func testHolidaysOnDate() {
