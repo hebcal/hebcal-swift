@@ -11,8 +11,7 @@ let FEB = 2
 let DEC = 12
 
 let monthLengths = [
-    [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-    [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+    0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
 ]
 
 public func isGregLeapYear(year: Int) -> Bool {
@@ -55,6 +54,13 @@ public func greg2abs(date: Date, calendar: Calendar) -> Int64 {
             (year / 400))  /* + Gregorian leap years */
 }
 
+func daysInMonth(month: Int, year: Int) -> Int {
+    if month == FEB && isGregLeapYear(year: year) {
+        return 29
+    }
+    return monthLengths[month]
+}
+
 /*
  * See the footnote on page 384 of ``Calendrical Calculations, Part II:
  * Three Historical Calendars'' by E. M. Reingold,  N. Dershowitz, and S. M.
@@ -80,7 +86,7 @@ public func abs2greg(absdate: Int64, calendar: Calendar) -> Date {
     } else {
         year = year + 1
         var month = 1
-        while case let mlen = monthLengths[isGregLeapYear(year: year) ? 1 : 0][month], mlen < day {
+        while case let mlen = daysInMonth(month: month, year: year), mlen < day {
             day -= mlen
             month = month + 1
         }

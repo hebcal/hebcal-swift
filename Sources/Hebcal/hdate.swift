@@ -221,21 +221,55 @@ public class HDate: Comparable, Hashable, Codable, Identifiable {
         return absdate!
     }
 
+    // Converts this Hebrew Date to a Gregorian Date object.
     public func greg() -> Date {
         return abs2greg(absdate: self.abs(), calendar: .current)
     }
 
+    // Dow returns the day of the week specified by hd.
     public func dow() -> DayOfWeek {
         let day = Int(self.abs() % 7)
         return DayOfWeek(rawValue: day)!
     }
 
+    // Next returns the next Hebrew date.
     public func next() -> HDate {
         return HDate(absdate: self.abs() + 1)
     }
 
+    // Prev returns the previous Hebrew date.
     public func prev() -> HDate {
         return HDate(absdate: self.abs() - 1)
+    }
+
+    // Before returns an HDate representing the dayOfWeek before
+    // the Hebrew date specified by hd.
+    public func before(dayOfWeek: DayOfWeek) -> HDate {
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() - 1))
+    }
+
+    // OnOrBefore returns an HDate corresponding to the dayOfWeek on or before
+    // the Hebrew date specified by hd.
+    public func onOrBefore(dayOfWeek: DayOfWeek) -> HDate {
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs()))
+    }
+
+    // Nearest returns an HDate representing the nearest dayOfWeek to
+    // the Hebrew date specified by hd.
+    public func nearest(dayOfWeek: DayOfWeek) -> HDate {
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() + 3))
+    }
+
+    // OnOrAfter returns an HDate corresponding to the dayOfWeek on or after
+    // the Hebrew date specified by hd.
+    public func onOrAfter(dayOfWeek: DayOfWeek) -> HDate {
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() + 6))
+    }
+
+    // After returns an HDate corresponding to the dayOfWeek after
+    // the Hebrew date specified by hd.
+    public func after(dayOfWeek: DayOfWeek) -> HDate {
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() + 7))
     }
 
     public func monthName() -> String {
@@ -270,4 +304,10 @@ public class HDate: Comparable, Hashable, Codable, Identifiable {
  */
 public func dayOnOrBefore(dayOfWeek: DayOfWeek, absdate: Int64) -> Int64 {
     return absdate - ((absdate - Int64(dayOfWeek.rawValue)) % 7)
+}
+
+extension HDate: CustomStringConvertible {
+    public var description: String {
+        return "\(dd) \(monthName()) \(yy)"
+    }
 }

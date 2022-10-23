@@ -296,7 +296,7 @@ let heTranslations = [
     "Yitzhak Rabin Memorial Day": "יוֹם הַזִּכָּרוֹן ליצחק רבין",
     "Jabotinsky Day": "יוֹם ז׳בוטינסקי",
     "Herzl Day": "יוֹם הרצל",
-    "Ben-Gurion Day": "יוֹם בן-גוריון",
+    "Ben-Gurion Day": "יוֹם בן־גוריון",
 ]
 
 let parshaNikud = [

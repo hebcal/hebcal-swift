@@ -194,6 +194,13 @@
             }
         }
 
+        func testModernFriSatMovetoThu() {
+            let holidays = getHolidaysForYear(year: 5781, il: true)
+            if let ev = holidays.first(where: { $0.desc == "Yitzhak Rabin Memorial Day" }) {
+                XCTAssertEqual(ev.hdate.description, "11 Cheshvan 5781")
+            }
+        }
+
         func testHolidaysOnDate() {
             var h = getHolidaysOnDate(hdate: HDate(yy: 5785, mm: .SHVAT, dd: 15), il: false)
             XCTAssertEqual(h.count, 1)
