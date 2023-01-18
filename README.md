@@ -1,4 +1,4 @@
-# hebcal
+# hebcal-swift
 
 Hebcal is a perpetual Jewish Calendar. This library converts between
 Hebrew and Gregorian dates, and generates lists of Jewish holidays for
