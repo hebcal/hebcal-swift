@@ -17,4 +17,9 @@ let now = Date()
 let hdate = HDate(date: now, calendar: .current)
 
 print(hdate.render(lang: TranslationLang.en))
+
+let sedra = Sedra(year: hdate.yy, il: false)
+let parsha = sedra.lookup(hdate: hdate, lang: TranslationLang.en)
+
+print(parsha)
 ```
