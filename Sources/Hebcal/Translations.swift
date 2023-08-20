@@ -56,7 +56,6 @@ let ashkenaziTranslations = [
     "Ki Tisa": "Ki Sisa",
     "Matot": "Matos",
     "Purim Katan": "Purim Koton",
-    "Tazria": "Sazria",
     "Tevet": "Teves",
     "Shabbat Chazon": "Shabbos Chazon",
     "Shabbat HaChodesh": "Shabbos HaChodesh",
