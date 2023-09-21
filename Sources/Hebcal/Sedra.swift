@@ -64,7 +64,7 @@ public let parshiot = [
     "Ki Tavo",
     "Nitzavim",
     "Vayeilech",
-    "Ha'Azinu",
+    "Ha'azinu",
 ];
 
 /*
