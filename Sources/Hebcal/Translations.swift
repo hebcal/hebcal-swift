@@ -16,12 +16,12 @@ public func lookupTranslation2(str: String) -> String {
 public func lookupTranslation(str: String, lang: TranslationLang) -> String {
     switch lang {
     case .en:
-        return str
+        return str.replacingOccurrences(of: "'", with: "’")
     case .ashkenazi:
         if let msg = ashkenaziTranslations[str] {
-            return msg
+            return msg.replacingOccurrences(of: "'", with: "’")
         } else {
-            return str
+            return str.replacingOccurrences(of: "'", with: "’")
         }
     case .he:
         if let msg = heTranslations[str] {

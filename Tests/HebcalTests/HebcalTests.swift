@@ -114,6 +114,16 @@
             XCTAssertEqual(lookupTranslation(str: "Bechukotai", lang: TranslationLang.heNikud), "בְּחֻקֹּתַי")
         }
 
+        func testlookupTranslationApos() {
+            XCTAssertEqual(lookupTranslation(str: "Sh'vat", lang: TranslationLang.en), "Sh’vat")
+            XCTAssertEqual(lookupTranslation(str: "Sh'vat", lang: TranslationLang.ashkenazi), "Sh’vat")
+            XCTAssertEqual(lookupTranslation(str: "Sh'vat", lang: TranslationLang.he), "שבט")
+
+            XCTAssertEqual(lookupTranslation(str: "Ta'anit Bechorot", lang: TranslationLang.en), "Ta’anit Bechorot")
+            XCTAssertEqual(lookupTranslation(str: "Ta'anit Bechorot", lang: TranslationLang.ashkenazi), "Ta’anis Bechoros")
+            XCTAssertEqual(lookupTranslation(str: "Ta'anit Bechorot", lang: TranslationLang.he), "תענית בכורות")
+        }
+
         func testHebnum() {
             XCTAssertEqual(hebnumToString(number: 5781), "תשפ״א")
             XCTAssertEqual(hebnumToString(number: 2), "ב׳")
