@@ -261,7 +261,7 @@
                 ["2010-10-01", "Simchat Torah"],
                 ["2010-10-08", "Rosh Chodesh Cheshvan"],
                 ["2010-10-09", "Rosh Chodesh Cheshvan"],
-                ["2010-11-06", "Sigd"],
+                ["2010-11-04", "Sigd"],
                 ["2010-11-07", "Rosh Chodesh Kislev"],
                 ["2010-11-08", "Rosh Chodesh Kislev"],
                 ["2010-12-01", "Chanukah: 1 Candle"],

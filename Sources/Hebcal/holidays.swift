@@ -218,7 +218,7 @@ let staticModernHolidays: [ModernHoliday] = [
                   firstYear: 5769,
                   chul: true,
                   suppressEmoji: true,
-                  friSatMovetoThu: false,
+                  friSatMovetoThu: true,
                   satPostponeToSun: false, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .NISAN, dd: 10, desc: "Yom HaAliyah"),
                   firstYear: 5777,
