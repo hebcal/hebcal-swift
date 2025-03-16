@@ -475,4 +475,17 @@
             let day3 = calendar.date(from: DateComponents(year: 2021, month: 3, day: 23))!
             XCTAssertEqual(try dafYomi(date: day3), Daf(name: "Shekalim", blatt: 2))
         }
+        func testPurimMeshulash() {
+            let events = getHolidaysForYear(year: 5785, il: false)
+            if let ev = events.first(where: { $0.desc == "Shushan Purim" }) {
+                XCTAssertEqual(ev.hdate.description, "15 Adar 5785")
+            } else {
+                XCTFail()
+            }
+            if let ev = events.first(where: { $0.desc == "Purim Meshulash" }) {
+                XCTAssertEqual(ev.hdate.description, "16 Adar 5785")
+            } else {
+                XCTFail()
+            }
+        }
     }

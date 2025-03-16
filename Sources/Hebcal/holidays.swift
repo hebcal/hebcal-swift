@@ -113,6 +113,7 @@ let staticHolidays: [Holiday] = [
     Holiday(mm: .SHVAT, dd: 15, desc: "Tu BiShvat", flags: .MINOR_HOLIDAY, emoji: "🌳"),
     Holiday(mm: .ADAR_II, dd: 13, desc: "Erev Purim", flags: [.EREV, .MINOR_HOLIDAY], emoji: "🎭️📜"),
     Holiday(mm: .ADAR_II, dd: 14, desc: "Purim", flags: .MINOR_HOLIDAY, emoji: "🎭️📜"),
+    Holiday(mm: .ADAR_II, dd: 15, desc: "Shushan Purim", flags: .MINOR_HOLIDAY, emoji: "🎭️📜"),
     Holiday(mm: .NISAN, dd: 14, desc: "Erev Pesach", flags: [.EREV, .LIGHT_CANDLES]),
     // Pesach Israel
     Holiday(mm: .NISAN, dd: 15, desc: "Pesach I",
@@ -268,8 +269,6 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
                emoji: "🕍"),
         HEvent(hdate: HDate(absdate: pesachAbs - (pesach.dow() == .TUE ? 33 : 31)),
                desc: "Ta'anit Esther", flags: .MINOR_FAST),
-        HEvent(hdate: HDate(absdate: pesachAbs - (pesach.dow() == .SUN ? 28 : 29)),
-               desc: "Shushan Purim", flags: .MINOR_HOLIDAY, emoji: "🎭️📜"),
         HEvent(hdate: HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: pesachAbs - 14) - 7),
                desc: "Shabbat Parah", flags: .SPECIAL_SHABBAT,
                emoji: "🕍"),
@@ -288,6 +287,10 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
                 absdate: HDate(yy: year + 1, mm: .TISHREI, dd: 1).abs() - 4)),
                desc: "Leil Selichot", flags: .MINOR_HOLIDAY, emoji: "🕍"),
     ])
+    if pesach.dow() == .SUN {
+        events.append(HEvent(hdate: HDate(yy: year, mm: .ADAR_II, dd: 16),
+                             desc: "Purim Meshulash", flags: .MINOR_HOLIDAY, emoji: "🎭️"))
+    }
     if isLeapYear(year: year) {
         events.append(HEvent(hdate: HDate(yy: year, mm: .ADAR_I, dd: 14),
                              desc: "Purim Katan", flags: .MINOR_HOLIDAY, emoji: "🎭️"))
