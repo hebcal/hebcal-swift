@@ -1,5 +1,5 @@
 import Foundation
-import SunCalcSwift
+import SunCalc
 
 public enum HavdalahOpinion {
     case minutesAfterSunset(minutes: Int)
@@ -52,14 +52,14 @@ public struct Zmanim {
                 // Note: SunCalc's getPosition takes a Date object, but its calculations are based on the
                 // date instance it was initialized with for its primary .sunset, .sunrise etc. properties.
                 // To get the position at a *specific time* (currentDateToTest), we need to use that specific time.
-                // The SunCalcSwift library's SunCalc.getPosition might implicitly use the date it was initialized with,
+                // The SunCalc library's SunCalc.getPosition might implicitly use the date it was initialized with,
                 // or it might correctly use the date passed to the method.
                 // The original suncalc.js `getPosition` takes a date argument that overrides the instance's date.
-                // Let's assume SunCalcSwift behaves similarly or use a fresh SunCalc instance if needed.
+                // Let's assume SunCalc behaves similarly or use a fresh SunCalc instance if needed.
                 // For safety, creating a new SunCalc instance for each iteration or ensuring getPosition uses the passed date is better.
-                // However, the provided SunCalcSwift's SunCalc class is initialized with a date and other properties are based on that.
+                // However, the provided SunCalc's SunCalc class is initialized with a date and other properties are based on that.
                 // Let's try passing the date to getPosition, assuming it overrides. If not, a new instance per iteration is needed.
-                // After reviewing SunCalcSwift source, `getPosition` indeed takes a `date` parameter and uses it.
+                // After reviewing SunCalc source, `getPosition` indeed takes a `date` parameter and uses it.
 
                 let position = sunCalc.getPosition(date: currentDateToTest, latitude: latitude, longitude: longitude)
                 let altitudeDegrees = position.altitude * 180 / .pi // Convert radians to degrees

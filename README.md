@@ -26,7 +26,7 @@ print(parsha)
 
 ## Zmanim Calculations (Shabbat and Havdalah Times)
 
-This library provides functions to calculate Shabbat candle lighting times and Havdalah times based on geographic coordinates and date. These calculations are performed using the `SunCalcSwift` library.
+This library provides functions to calculate Shabbat candle lighting times and Havdalah times based on geographic coordinates and date. These calculations are performed using the `SunCalc` library.
 
 ### Candle Lighting Time
 

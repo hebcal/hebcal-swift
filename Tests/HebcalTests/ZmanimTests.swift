@@ -1,9 +1,9 @@
 import XCTest
 @testable import Hebcal
 import Foundation
-import SunCalcSwift // Needed for direct SunCalc use if we want to verify sunset time itself
+import SunCalc // Needed for direct SunCalc use if we want to verify sunset time itself
 
-class ZmanimTests: XCTestCase {
+final class ZmanimTests: XCTestCase {
 
     let dateFormatter: DateFormatter = {
         let df = DateFormatter()
@@ -149,7 +149,7 @@ class ZmanimTests: XCTestCase {
         XCTAssertNotNil(havdalahTime, "Havdalah time for 8.5 degrees should not be nil.")
 
         // Verify it's after sunset.
-        let sunCalc = SunCalc(date: date, latitude: 40.7128, longitude: -74.0060) // Use the test date for SunCalc
+        let sunCalc = SunCalc.getTimes(date: date, latitude: 40.7128, longitude: -74.0060) // Use the test date for SunCalc
         XCTAssertNotNil(sunCalc.sunset, "Sunset should be available for this test.")
         if let sunset = sunCalc.sunset, let havdalah = havdalahTime {
             XCTAssertTrue(havdalah.timeIntervalSince(sunset) > 0, "Havdalah must be after sunset.")
@@ -182,7 +182,7 @@ class ZmanimTests: XCTestCase {
 
         let havdalahTime = Zmanim.getHavdalahTime(for: date, latitude: 69.6492, longitude: 18.9553, timeZone: tromsoTimeZone, opinion: .degreesBelowHorizon(angle: 8.5))
 
-        let sunCalc = SunCalc(date: date, latitude: 69.6492, longitude: 18.9553)
+        let sunCalc = SunCalc.getTimes(date: date, latitude: 69.6492, longitude: 18.9553)
         if sunCalc.sunset == nil {
             XCTAssertNil(havdalahTime, "Havdalah time should be nil if sunset is nil (polar night).")
         } else {
@@ -212,6 +212,6 @@ class ZmanimTests: XCTestCase {
 // For Havdalah (degrees), the expected time is also cross-referenced but the iterative nature might lead to small diffs.
 // The Arctic/Antarctic tests check for nil (no sunset/sunrise) or specific behavior in extreme conditions.
 // The Tromso test for degreesBelowHorizon in winter is a complex edge case.
-// SunCalcSwift's `sunset` for polar night might be when the sun is at its highest point (solar noon) but still below the horizon.
+// SunCalc's `sunset` for polar night might be when the sun is at its highest point (solar noon) but still below the horizon.
 // If so, `getPosition` at that time would show an altitude significantly below 0. If this altitude is already <= -8.5 degrees,
 // the `getHavdalahTime` would return this "sunset" time.
