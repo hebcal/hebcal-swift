@@ -26,7 +26,7 @@ print(parsha)
 
 ## Zmanim Calculations (Shabbat and Havdalah Times)
 
-This library provides functions to calculate Shabbat candle lighting times and Havdalah times based on geographic coordinates and date. These calculations are performed using the `SunCalc` library.
+This library provides functions to calculate Shabbat candle lighting times and Havdalah times based on geographic coordinates and date. Sunrise and sunset are computed with `NOAACalculator`, a Swift port of the NOAA algorithm from the [KosherJava Zmanim API](https://github.com/KosherJava/zmanim), and times are rounded to the minute the same way as [@hebcal/core](https://github.com/hebcal/hebcal-es6).
 
 ### Candle Lighting Time
 
@@ -66,7 +66,7 @@ if let jerusalemTime = jerusalemCandleLighting {
     formatter.timeStyle = .medium
     formatter.timeZone = jerusalemTimeZone
     print("Jerusalem Candle Lighting on \(formatter.string(from: fridayDate)): \(formatter.string(from: jerusalemTime))")
-    // Example Output: Jerusalem Candle Lighting on Dec 1, 2023: 3:52:05 PM
+    // Example Output: Jerusalem Candle Lighting on Dec 1, 2023: 3:55:00 PM
 }
 
 // Example for New York (18 minutes before sunset)
@@ -88,7 +88,7 @@ if let nyTime = nyCandleLighting {
     formatter.timeStyle = .medium
     formatter.timeZone = nyTimeZone
     print("New York Candle Lighting on \(formatter.string(from: fridayDate)): \(formatter.string(from: nyTime))")
-    // Example Output: New York Candle Lighting on Dec 1, 2023: 4:10:45 PM
+    // Example Output: New York Candle Lighting on Dec 1, 2023: 4:11:00 PM
 }
 ```
 
@@ -132,7 +132,7 @@ if let havdalah42 = havdalah42Min {
     formatter.timeStyle = .medium
     formatter.timeZone = nyTimeZone
     print("Havdalah (42 min) in New York on \(formatter.string(from: saturdayDate)): \(formatter.string(from: havdalah42))")
-    // Example Output: Havdalah (42 min) in New York on Dec 2, 2023: 5:10:45 PM
+    // Example Output: Havdalah (42 min) in New York on Dec 2, 2023: 5:11:00 PM
 }
 
 // Option 2: Havdalah when the sun is 8.5 degrees below the horizon
@@ -150,11 +150,12 @@ if let havdalah8_5 = havdalah8_5Deg {
     formatter.timeStyle = .medium
     formatter.timeZone = nyTimeZone
     print("Havdalah (8.5°) in New York on \(formatter.string(from: saturdayDate)): \(formatter.string(from: havdalah8_5))")
-    // Example Output: Havdalah (8.5°) in New York on Dec 2, 2023: 5:06:15 PM (approx.)
+    // Example Output: Havdalah (8.5°) in New York on Dec 2, 2023: 5:14:00 PM
 }
 ```
 
 **Note:**
 - Always provide an accurate `TimeZone` for the location, as this significantly affects time calculations.
-- The `for date:` parameter in these functions is used to determine the day for the solar calculations. Ensure it corresponds to the correct day of the week (Friday for candle lighting, Saturday for Havdalah).
+- The `for date:` parameter in these functions is used to determine the day for the solar calculations; the calendar date is taken in the given `timeZone`. Ensure it corresponds to the correct day of the week (Friday for candle lighting, Saturday for Havdalah).
 - Calculations for locations in polar regions (where sunset/sunrise might not occur or behave differently) will return `nil` if the requested solar event does not happen or cannot be calculated.
+- For other solar times (sunrise, solar noon, dawn/dusk at an arbitrary angle, elevation-adjusted sunrise/sunset), use `AstronomicalCalendar` directly, e.g. `AstronomicalCalendar(geoLocation: GeoLocation(latitude: lat, longitude: lon, elevation: meters, timeZone: tz), date: date).getSunrise()`.
