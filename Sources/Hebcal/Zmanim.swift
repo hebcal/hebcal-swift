@@ -10,15 +10,16 @@ public enum HavdalahOpinion {
 /// Times are computed with ``NOAACalculator`` using sea-level sunset.
 public struct Zmanim {
 
-    /// Candle lighting: 18 minutes before sunset (40 in Jerusalem), with sunset's seconds discarded.
-    /// Returns `nil` if the sun does not set on that date.
-    public static func getCandleLightingTime(for date: Date, latitude: Double, longitude: Double, timeZone: TimeZone, isJerusalem: Bool = false) -> Date? {
+    /// Candle lighting: `minutesBeforeSunset` minutes before sunset (typically 18; 40 in Jerusalem),
+    /// with sunset's seconds discarded. The sign of `minutesBeforeSunset` is ignored, so `18` and `-18`
+    /// are equivalent. Returns `nil` if the sun does not set on that date.
+    public static func getCandleLightingTime(for date: Date, latitude: Double, longitude: Double, timeZone: TimeZone, minutesBeforeSunset: Int = 18) -> Date? {
         let astro = astronomicalCalendar(for: date, latitude: latitude, longitude: longitude, timeZone: timeZone)
         guard let sunset = astro.getSeaLevelSunset() else {
             // Sunset might not occur in polar regions
             return nil
         }
-        return sunsetOffset(sunset, minutes: isJerusalem ? -40 : -18)
+        return sunsetOffset(sunset, minutes: -abs(minutesBeforeSunset))
     }
 
     /// Havdalah as a fixed number of minutes after sunset, or when the sun reaches an angle

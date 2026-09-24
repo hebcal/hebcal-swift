@@ -30,7 +30,7 @@ This library provides functions to calculate Shabbat candle lighting times and H
 
 ### Candle Lighting Time
 
-To calculate candle lighting time, use the `Zmanim.getCandleLightingTime` function. Candle lighting is typically 18 minutes before sunset. For Jerusalem, it is 40 minutes before sunset.
+To calculate candle lighting time, use the `Zmanim.getCandleLightingTime` function. Candle lighting is typically 18 minutes before sunset. For Jerusalem, it is 40 minutes before sunset. Pass the offset as `minutesBeforeSunset` (defaults to 18); its sign is ignored, so `40` and `-40` are equivalent.
 
 ```swift
 import Hebcal
@@ -56,7 +56,7 @@ let jerusalemCandleLighting = Zmanim.getCandleLightingTime(
     latitude: jerusalemLatitude,
     longitude: jerusalemLongitude,
     timeZone: jerusalemTimeZone,
-    isJerusalem: true // Specify true for Jerusalem's 40-minute rule
+    minutesBeforeSunset: 40 // Jerusalem's 40-minute custom
 )
 
 if let jerusalemTime = jerusalemCandleLighting {
@@ -79,7 +79,7 @@ let nyCandleLighting = Zmanim.getCandleLightingTime(
     latitude: nyLatitude,
     longitude: nyLongitude,
     timeZone: nyTimeZone,
-    isJerusalem: false // Defaults to false, explicitly shown here
+    minutesBeforeSunset: 18 // Defaults to 18, explicitly shown here
 )
 
 if let nyTime = nyCandleLighting {

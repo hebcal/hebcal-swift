@@ -40,9 +40,9 @@ final class ZmanimTests: XCTestCase {
         return calendar.date(from: DateComponents(year: year, month: month, day: day, hour: 12))!
     }
 
-    func candleLighting(_ place: Place, _ date: Date, isJerusalem: Bool = false) -> Date? {
+    func candleLighting(_ place: Place, _ date: Date, minutesBeforeSunset: Int = 18) -> Date? {
         return Zmanim.getCandleLightingTime(for: date, latitude: place.latitude, longitude: place.longitude,
-                                            timeZone: place.timeZone, isJerusalem: isJerusalem)
+                                            timeZone: place.timeZone, minutesBeforeSunset: minutesBeforeSunset)
     }
 
     func havdalah(_ place: Place, _ date: Date, _ opinion: HavdalahOpinion) -> Date? {
@@ -69,7 +69,12 @@ final class ZmanimTests: XCTestCase {
 
     func testCandleLighting_Jerusalem() {
         // Sunset 16:35:02 IST; 40 minutes before
-        assertTime(candleLighting(jerusalem, date(2023, 12, 1, jerusalem), isJerusalem: true), "2023-12-01T15:55:00+02:00")
+        assertTime(candleLighting(jerusalem, date(2023, 12, 1, jerusalem), minutesBeforeSunset: 40), "2023-12-01T15:55:00+02:00")
+    }
+
+    func testCandleLighting_NegativeMinutesBeforeSunset() {
+        // Sign is ignored: -40 is treated the same as 40
+        assertTime(candleLighting(jerusalem, date(2023, 12, 1, jerusalem), minutesBeforeSunset: -40), "2023-12-01T15:55:00+02:00")
     }
 
     func testCandleLighting_London() {
