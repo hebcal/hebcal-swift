@@ -24,6 +24,26 @@ let parsha = sedra.lookup(hdate: hdate, lang: TranslationLang.en)
 print(parsha)
 ```
 
+## Counting the Omer
+
+`OmerEvent` represents one of the 49 days of the Omer (16 Nisan through 5 Sivan).
+
+```swift
+import Hebcal
+
+let hdate = HDate(yy: 5784, mm: .NISAN, dd: 25)
+if let omer = OmerEvent(hdate: hdate) {  // nil outside the Omer
+    print(omer.render(lang: .en))        // 10th day of the Omer
+    print(omer.getTodayIs(lang: .en))    // Today is 10 days, which are 1 week and 3 days of the Omer
+    print(omer.sefira(lang: .translit))  // Tiferet shebiGevurah
+    print(omer.getEmoji())               // ⑩
+}
+```
+
+It also provides the Hebrew count (`getTodayIs(lang: .heNikud)`), and the day's
+word from Psalm 67 (`getLamnatzeachWord()`), letter from Psalm 67:5
+(`getLamnatzeachLetter()`) and word from Ana BeKoach (`getAnaBekoachWord()`).
+
 ## Zmanim Calculations (Shabbat and Havdalah Times)
 
 This library provides functions to calculate Shabbat candle lighting times and Havdalah times based on geographic coordinates and date. Sunrise and sunset are computed with `NOAACalculator`, a Swift port of the NOAA algorithm from the [KosherJava Zmanim API](https://github.com/KosherJava/zmanim), and times are rounded to the minute the same way as [@hebcal/core](https://github.com/hebcal/hebcal-es6).
