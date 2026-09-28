@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum TranslationLang: Int, CaseIterable, Codable {
+public enum TranslationLang: Int, CaseIterable, Codable, Sendable {
     case en = 0, ashkenazi = 1, he = 2, heNikud = 3
 }
 
@@ -16,33 +16,21 @@ public func lookupTranslation2(str: String) -> String {
 public func lookupTranslation(str: String, lang: TranslationLang) -> String {
     switch lang {
     case .en:
-        return str.replacingOccurrences(of: "'", with: "’")
+        return withTypographicApostrophes(str)
     case .ashkenazi:
-        if let msg = ashkenaziTranslations[str] {
-            return msg.replacingOccurrences(of: "'", with: "’")
-        } else {
-            return str.replacingOccurrences(of: "'", with: "’")
-        }
+        return withTypographicApostrophes(ashkenaziTranslations[str] ?? str)
     case .he:
-        if let msg = heTranslations[str] {
-            return msg
-        } else {
-            return str
-        }
+        return heTranslations[str] ?? str
     case .heNikud:
-        if let msg = parshaNikud[str] {
-            return msg
-        } else {
-            if let msg2 = heTranslations[str] {
-                return msg2
-            } else {
-                return str
-            }
-        }
+        return parshaNikud[str] ?? heTranslations[str] ?? str
     }
 }
 
-let ashkenaziTranslations = [
+private func withTypographicApostrophes(_ str: String) -> String {
+    return str.replacingOccurrences(of: "'", with: "’")
+}
+
+private let ashkenaziTranslations = [
     "Shabbat": "Shabbos",
     "Achrei Mot": "Achrei Mos",
     "Bechukotai": "Bechukosai",
@@ -91,9 +79,9 @@ let ashkenaziTranslations = [
     "Shabbat Shirah": "Shabbos Shirah"
 ]
 
-let maqaf = "־"
+private let maqaf = "־"
 
-let heTranslations = [
+private let heTranslations = [
     "Berachot": "ברכות",
     "Eruvin": "עירובין",
     "Pesachim": "פסחים",
@@ -298,7 +286,7 @@ let heTranslations = [
     "Ben-Gurion Day": "יוֹם בן־גוריון",
 ]
 
-let parshaNikud = [
+private let parshaNikud = [
     "Achrei Mot": "אַחֲרֵי מוֹת",
     "Balak": "בָּלָק",
     "Bamidbar": "בְּמִדְבַּר",
@@ -356,15 +344,13 @@ let parshaNikud = [
 ]
 
 extension HDate {
+    /// This date as a string such as "29 Tevet 5771", or "כ״ט טבת תשע״א" for `.he`.
     public func render(lang: TranslationLang?) -> String {
-        let language = lang ?? TranslationLang.en
+        let language = lang ?? .en
         let monthName = lookupTranslation(str: self.monthName(), lang: language)
         if language == .he {
-            return hebnumToString(number: self.dd) + " " +
-                monthName + " " +
-                hebnumToString(number: self.yy)
-        } else {
-            return String(self.dd) + " " + monthName + " " + String(self.yy)
+            return "\(hebnumToString(number: dd)) \(monthName) \(hebnumToString(number: yy))"
         }
+        return "\(dd) \(monthName) \(yy)"
     }
 }

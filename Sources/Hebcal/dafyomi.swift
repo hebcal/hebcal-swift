@@ -4,15 +4,12 @@
 
 import Foundation
 
-let osdate0 = DateComponents(year: 1923, month: 9, day: 11)
-let osdate = Calendar.current.date(from: osdate0)!
-let osday = greg2abs(date: osdate)
+/// Start of the first Daf Yomi cycle, 11 September 1923.
+private let osday = greg2abs(year: 1923, month: 9, day: 11)
+/// Start of the 8th cycle, 24 June 1975, after which Shekalim has 22 dapim instead of 13.
+private let nsday = greg2abs(year: 1975, month: 6, day: 24)
 
-let nsdate0 = DateComponents(year: 1975, month: 6, day: 24)
-let nsdate = Calendar.current.date(from: nsdate0)!
-let nsday = greg2abs(date: nsdate)
-
-public struct Daf: Equatable {
+public struct Daf: Equatable, Sendable {
     public let name: String
     public let blatt: Int
     public init(name: String, blatt: Int) {
@@ -21,7 +18,7 @@ public struct Daf: Equatable {
     }
 }
 
-let shas0: [Daf] = [
+private let shas: [Daf] = [
     Daf(name: "Berachot", blatt: 64),
     Daf(name: "Shabbat", blatt: 157),
     Daf(name: "Eruvin", blatt: 105),
@@ -68,59 +65,42 @@ public enum DafYomiError: Error {
     case beforeCycleBegan
 }
 
+/// The Babylonian Talmud page studied on `date` in the Daf Yomi cycle.
+/// Throws `DafYomiError.beforeCycleBegan` before 11 September 1923.
 public func dafYomi(date: Date) throws -> Daf {
     let cday = greg2abs(date: date)
-    if (cday < osday) {
+    if cday < osday {
         throw DafYomiError.beforeCycleBegan
     }
-    var cno: Int64
-    var dno: Int
-    if (cday >= nsday) { // "new" cycle
-      cno = 8 + ( (cday - nsday) / 2711 )
-      dno = Int(cday - nsday) % 2711
+    let cycleNum: Int64
+    let dayNum: Int
+    if cday >= nsday { // "new" cycle
+        cycleNum = 8 + (cday - nsday) / 2711
+        dayNum = Int(cday - nsday) % 2711
     } else { // old cycle
-      cno = 1 + ( (cday - osday) / 2702 )
-      dno = Int(cday - osday) % 2702
+        cycleNum = 1 + (cday - osday) / 2702
+        dayNum = Int(cday - osday) % 2702
     }
 
-    // Find the daf taking note that the cycle changed slightly after cycle 7.
-
+    // Find the daf, taking note that the cycle changed slightly after cycle 7.
     var total = 0
-    var blatt = 0
-    var count = -1
-
-    var shas = shas0
-    // Fix Shekalim for old cycles
-    if (cno <= 7) {
-        shas[4] = Daf(name: "Shekalim", blatt: 13)
-    }
-
-    // Find the daf
-    var j = 0
-    let dafcnt = 40
-    while (j < dafcnt) {
-      count += 1
-      total = total + shas[j].blatt - 1
-      if (dno < total) {
-        blatt = (shas[j].blatt + 1) - (total - dno)
-        // fiddle with the weird ones near the end
-        switch (count) {
-          case 36:
-            blatt = blatt + 21
-            break;
-          case 37:
-            blatt = blatt + 24
-            break;
-          case 38:
-            blatt = blatt + 32
-            break;
-          default:
-            break;
+    for (index, tractate) in shas.enumerated() {
+        // Shekalim had 13 dapim in the old cycles
+        let tractateBlatt = (cycleNum <= 7 && tractate.name == "Shekalim") ? 13 : tractate.blatt
+        total += tractateBlatt - 1
+        guard dayNum < total else {
+            continue
         }
-        // Bailout
-        j = 1 + dafcnt
-      }
-      j += 1
+        var blatt = (tractateBlatt + 1) - (total - dayNum)
+        // Kinnim, Tamid and Midot are printed after Meilah and continue its page numbers
+        switch index {
+        case 36: blatt += 21
+        case 37: blatt += 24
+        case 38: blatt += 32
+        default: break
+        }
+        return Daf(name: tractate.name, blatt: blatt)
     }
-    return Daf(name: shas[count].name, blatt: blatt)
+    // Unreachable: dayNum is less than the total number of dapim
+    return Daf(name: shas[shas.count - 1].name, blatt: 0)
 }

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  hebnum.swift
 //  
 //
 //  Created by Michael Radwin on 8/23/21.
@@ -7,10 +7,10 @@
 
 import Foundation
 
-let GERESH = "׳"
-let GERSHAYIM = "״"
+private let geresh = "׳"
+private let gershayim = "״"
 
-func num2heb(num: Int) -> String {
+private func num2heb(num: Int) -> String {
     switch num {
     case 1: return "א"
     case 2: return "ב"
@@ -44,35 +44,35 @@ func num2heb(num: Int) -> String {
     }
 }
 
+/// Formats `number` in Hebrew numerals (gematriya), e.g. 5781 → "תשפ״א".
+/// Thousands are dropped, 15 and 16 are written ט״ו and ט״ז, and a geresh or
+/// gershayim is added.
 public func hebnumToString(number: Int) -> String {
     var digits = [Int]()
     var num = number % 1000
     while num > 0 {
         if num == 15 || num == 16 {
-            digits.append(9)
-            digits.append(num - 9)
+            digits += [9, num - 9]
             break
         }
+        // Largest of 400, 300, ..., 100, 90, ..., 10, 9, ..., 1 that fits
         var incr = 100
         var i = 400
         while i > num {
             if i == incr {
-                incr = incr / 10
+                incr /= 10
             }
             i -= incr
         }
         digits.append(i)
         num -= i
     }
-    if digits.count == 1 {
-        return num2heb(num: digits[0]) + GERESH
+    let letters = digits.map { num2heb(num: $0) }
+    guard let last = letters.last else {
+        return ""  // multiples of 1000
     }
-    var str = ""
-    for i in 0 ..< digits.count {
-        if i + 1 == digits.count {
-            str += GERSHAYIM
-        }
-        str += num2heb(num: digits[i])
+    if letters.count == 1 {
+        return last + geresh
     }
-    return str
+    return letters.dropLast().joined() + gershayim + last
 }

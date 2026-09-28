@@ -4,12 +4,13 @@
 
 import Foundation
 
-struct MishnaYomi {
+/// A tractate and the number of mishnayot in each of its chapters.
+private struct MishnaYomi {
     let k: String
     let v: [Int8]
 }
 
-let mishnayot: [MishnaYomi] = [
+private let mishnayot: [MishnaYomi] = [
   MishnaYomi(k: "Berakhot", v: [5,8,6,7,5,8,5,8,5]),
   MishnaYomi(k: "Peah", v: [6,8,8,11,8,11,8,9]),
   MishnaYomi(k: "Demai", v: [4,5,6,7,11,12,8]),
@@ -75,14 +76,13 @@ let mishnayot: [MishnaYomi] = [
   MishnaYomi(k: "Oktzin", v: [6,10,12]),
 ]
 
-let comps = DateComponents(year: 1947, month: 5, day: 20)
-let cycleStartDate = Calendar.current.date(from: comps)!
-let mishnaYomiStart = greg2abs(date: cycleStartDate)
+/// Start of the first Mishna Yomi cycle, 20 May 1947.
+private let mishnaYomiStart = greg2abs(year: 1947, month: 5, day: 20)
 
-let numMishnayot = 4192
-let numDays = numMishnayot / 2
+private let numMishnayot = 4192
+private let numDays = numMishnayot / 2
 
-public struct Mishna: Equatable {
+public struct Mishna: Equatable, Sendable {
     public let tractate: String
     public let chap: Int
     public let verse: Int
@@ -93,30 +93,19 @@ public struct Mishna: Equatable {
     }
 }
 
-let dummy = Mishna(tractate: "x", chap: 0, verse: 0)
+/// The pair of mishnayot studied each day of the Mishna Yomi cycle.
+public final class MishnaYomiIndex: Sendable {
+    let days: [(Mishna, Mishna)]
 
-public class MishnaYomiIndex {
-    var days: [(Mishna, Mishna)] = Array(repeating: (dummy, dummy), count: numDays)
     public init() {
-        var tmp = [Mishna]()
-        for tractate in mishnayot {
-            var chap = 1
-            while chap <= tractate.v.count {
-                let numv = tractate.v[chap - 1]
-                var verse = 1
-                while verse <= numv {
-                    tmp.append(Mishna(tractate: tractate.k, chap: chap, verse: verse))
-                    verse += 1
+        let all = mishnayot.flatMap { tractate in
+            tractate.v.enumerated().flatMap { chapIndex, numVerses in
+                (1...Int(numVerses)).map { verse in
+                    Mishna(tractate: tractate.k, chap: chapIndex + 1, verse: verse)
                 }
-                chap += 1
             }
         }
-        var j = 0
-        while j < numDays {
-            let k = j * 2
-            days[j] = (tmp[k], tmp[k + 1])
-            j += 1
-        }
+        days = (0..<numDays).map { (all[2 * $0], all[2 * $0 + 1]) }
     }
 
     public func lookup(date: Date) -> (Mishna, Mishna) {
@@ -126,16 +115,16 @@ public class MishnaYomiIndex {
     }
 }
 
+/// Formats a pair of mishnayot compactly, e.g. "Berakhot 1:1-2",
+/// "Berakhot 2:8-3:1" or "Nedarim 11:12-Nazir 1:1".
 public func formatMishnaYomi(pair: (Mishna, Mishna)) -> String {
-    var s = pair.0.tractate + " " + String(pair.0.chap) + ":" + String(pair.0.verse) + "-"
-    let sameTractate = pair.1.tractate == pair.0.tractate
-    if (!sameTractate) {
-        s += pair.1.tractate + " "
-    }
-    if (sameTractate && pair.1.chap == pair.0.chap) {
-        s += String(pair.1.verse)
+    let (first, second) = pair
+    let start = "\(first.tractate) \(first.chap):\(first.verse)"
+    if second.tractate != first.tractate {
+        return "\(start)-\(second.tractate) \(second.chap):\(second.verse)"
+    } else if second.chap != first.chap {
+        return "\(start)-\(second.chap):\(second.verse)"
     } else {
-        s += String(pair.1.chap) + ":" + String(pair.1.verse)
+        return "\(start)-\(second.verse)"
     }
-    return s
 }

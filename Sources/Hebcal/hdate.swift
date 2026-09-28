@@ -1,128 +1,99 @@
 //
 //  hdate.swift
-//  
+//
 //
 //  Created by Michael Radwin on 8/17/21.
 //
 
 import Foundation
 
-public enum HebrewMonth: Int, CaseIterable, Codable {
+public enum HebrewMonth: Int, CaseIterable, Codable, Sendable {
     case NISAN = 1, IYYAR, SIVAN, TAMUZ, AV, ELUL,
          TISHREI, CHESHVAN, KISLEV, TEVET, SHVAT, ADAR_I, ADAR_II
 }
 
-public enum DayOfWeek: Int, CaseIterable, Codable {
+public enum DayOfWeek: Int, CaseIterable, Codable, Sendable {
     case SUN = 0, MON, TUE, WED, THU, FRI, SAT
 }
 
-let EPOCH: Int64 = -1373428
+/// Absolute (R.D.) day number of the day before 1 Tishrei 1.
+private let epoch: Int64 = -1373428
 
-/**
- * Returns true if Hebrew year is a leap year
- * @param {number} year Hebrew year
- * @return {boolean}
- */
+/// `absdate` modulo 7 in the range 0...6 (Swift's `%` is negative for negative
+/// `absdate`), which is the day of the week with 0 = Sunday.
+func dayOfWeekIndex(_ absdate: Int64) -> Int {
+    let r = Int(absdate % 7)
+    return r < 0 ? r + 7 : r
+}
+
+public enum HDateError: Error, Equatable, Sendable {
+    /// The date is before 1 Tishrei 1, the first day of the Hebrew calendar.
+    case beforeFirstHebrewDate
+    /// The day is not between 1 and the number of days in the month.
+    case dayOutOfRange
+}
+
+/// Whether the Hebrew `year` is a leap year (has 13 months).
 public func isLeapYear(year: Int) -> Bool {
     return (1 + year * 7) % 19 < 7
 }
 
-/**
- * Number of months in this Hebrew year (either 12 or 13 depending on leap year)
- * @param {number} year Hebrew year
- * @return {number}
- */
+/// Number of months in the Hebrew `year`: 12, or 13 in a leap year.
 public func monthsInYear(year: Int) -> Int {
-    let extra = isLeapYear(year: year) ? 1 : 0
-    return 12 + extra
+    return isLeapYear(year: year) ? 13 : 12
 }
 
-var edCache: [Int:Int64] = [:]
-
+/// Days from the Sunday before the start of the Hebrew calendar to the mean
+/// conjunction of Tishrei in the Hebrew `year`, after applying the postponements
+/// (dechiyot).
+///
+/// Not cached: the calculation is ~20 integer operations (~9 ns), cheaper than
+/// any thread-safe cache would be. (A former `[Int: Int64]` dictionary cache was
+/// mutated without synchronization and crashed when HDates were created on
+/// several threads at once.)
 func elapsedDays(year: Int) -> Int64 {
-    if let ed = edCache[year] {
-        return ed
-    }
-    let ed = elapsedDays0(year: year)
-    edCache[year] = ed
-    return ed
-}
-
-/**
- * Days from sunday prior to start of Hebrew calendar to mean
- * conjunction of Tishrei in Hebrew YEAR
- * @private
- * @param {number} year Hebrew year
- * @return {number}
- */
-func elapsedDays0(year: Int) -> Int64 {
     let prevYear = year - 1
-    
-    let mElapsedMonths = 235 * (prevYear / 19)
-    let mElapsedRegularMonths = 12 * (prevYear % 19)
-    let mElapsedLeapMonths = ((prevYear % 19) * 7 + 1) / 19
-    
-    let mElapsed: Int64 = Int64(mElapsedMonths + mElapsedRegularMonths + mElapsedLeapMonths)
-    
-    let pElapsed: Int64 = 204 + 793 * (mElapsed % 1080)
-    
-    let hElapsed: Int64 = 5 +
-        12 * mElapsed +
-        793 * (mElapsed / 1080) +
-        (pElapsed / 1080)
-    
-    let parts: Int64 = (pElapsed % 1080) + 1080 * (hElapsed % 24)
-    
-    let day: Int64 = 1 + 29 * mElapsed + (hElapsed / 24)
-    
+
+    let mElapsed = Int64(
+        235 * (prevYear / 19) +             // months in complete 19-year cycles
+        12 * (prevYear % 19) +              // regular months in this cycle
+        ((prevYear % 19) * 7 + 1) / 19)     // leap months in this cycle
+
+    let pElapsed = 204 + 793 * (mElapsed % 1080)
+    let hElapsed = 5 + 12 * mElapsed + 793 * (mElapsed / 1080) + pElapsed / 1080
+    let parts = (pElapsed % 1080) + 1080 * (hElapsed % 24)
+    let day = 1 + 29 * mElapsed + hElapsed / 24
+
     var altDay = day
-    
-    if (parts >= 19440) ||
-            ((2 == (day % 7)) && (parts >= 9924) && !(isLeapYear(year: year))) ||
-            ((1 == (day % 7)) && (parts >= 16789) && isLeapYear(year: prevYear)) {
-        altDay = day + 1
+    if parts >= 19440 ||
+        (day % 7 == 2 && parts >= 9924 && !isLeapYear(year: year)) ||
+        (day % 7 == 1 && parts >= 16789 && isLeapYear(year: prevYear)) {
+        altDay += 1
     }
-    
-    if altDay % 7 == 0 || altDay % 7 == 3 || altDay % 7 == 5 {
-        return altDay + 1
-    } else {
-        return altDay
+
+    // Lo ADU Rosh: Rosh Hashana never falls on Sunday, Wednesday or Friday
+    switch altDay % 7 {
+    case 0, 3, 5: return altDay + 1
+    default: return altDay
     }
 }
 
-/**
- * Number of days in the hebrew YEAR
- * @param {number} year Hebrew year
- * @return {number}
- */
+/// Number of days in the Hebrew `year`.
 public func daysInYear(year: Int) -> Int {
     return Int(elapsedDays(year: year + 1) - elapsedDays(year: year))
 }
 
-/**
- * true if Cheshvan is long in Hebrew year
- * @param {number} year Hebrew year
- * @return {boolean}
- */
+/// Whether Cheshvan has 30 days in the Hebrew `year`.
 public func longCheshvan(year: Int) -> Bool {
     return daysInYear(year: year) % 10 == 5
 }
 
-/**
- * true if Kislev is short in Hebrew year
- * @param {number} year Hebrew year
- * @return {boolean}
- */
+/// Whether Kislev has 29 days in the Hebrew `year`.
 public func shortKislev(year: Int) -> Bool {
     return daysInYear(year: year) % 10 == 3
 }
 
-/**
- * Number of days in Hebrew month in a given year (29 or 30)
- * @param {number} month Hebrew month (e.g. months.TISHREI)
- * @param {number} year Hebrew year
- * @return {number}
- */
+/// Number of days (29 or 30) in the Hebrew `month` of `year`.
 public func daysInMonth(month: HebrewMonth, year: Int) -> Int {
     switch month {
     case .IYYAR, .TAMUZ, .ELUL, .TEVET, .ADAR_II:
@@ -130,7 +101,7 @@ public func daysInMonth(month: HebrewMonth, year: Int) -> Int {
     case .ADAR_I:
         return isLeapYear(year: year) ? 30 : 29
     case .CHESHVAN:
-        return longCheshvan(year: year) ? 30: 29
+        return longCheshvan(year: year) ? 30 : 29
     case .KISLEV:
         return shortKislev(year: year) ? 29 : 30
     default:
@@ -138,37 +109,105 @@ public func daysInMonth(month: HebrewMonth, year: Int) -> Int {
     }
 }
 
-let TISHREI = HebrewMonth.TISHREI.rawValue
-
+/// Converts a Hebrew date to an absolute (R.D.) day number.
 public func hebrew2abs(year: Int, month: HebrewMonth, day: Int) -> Int64 {
-    var tempabs: Int64 = Int64(day)
-    let imonth: Int = month.rawValue
-    if imonth < TISHREI {
-        for m in TISHREI...monthsInYear(year: year) {
-            tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
-        }
-        for m in HebrewMonth.NISAN.rawValue..<imonth {
-            tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
-        }
-    } else {
-        for m in TISHREI..<imonth {
-            tempabs += Int64(daysInMonth(month: HebrewMonth(rawValue: m)!, year: year))
-        }
+    func days<R: Sequence<Int>>(inMonths months: R) -> Int {
+        return months.reduce(0) { $0 + daysInMonth(month: HebrewMonth(rawValue: $1)!, year: year) }
     }
-    return EPOCH + elapsedDays(year: year) + tempabs - 1
+    let tishrei = HebrewMonth.TISHREI.rawValue
+    // The year starts in Tishrei, so Nisan through Elul come after Adar.
+    let daysBefore = month.rawValue < tishrei
+        ? days(inMonths: tishrei...monthsInYear(year: year)) + days(inMonths: HebrewMonth.NISAN.rawValue..<month.rawValue)
+        : days(inMonths: tishrei..<month.rawValue)
+    return newYear(year: year) + Int64(daysBefore + day - 1)
 }
 
+/// Absolute (R.D.) day number of 1 Tishrei of the Hebrew `year`.
 func newYear(year: Int) -> Int64 {
-    return EPOCH + elapsedDays(year: year)
+    return epoch + elapsedDays(year: year)
 }
 
-public class HDate: Comparable, Hashable, Codable, Identifiable {
-    public static func < (lhs: HDate, rhs: HDate) -> Bool {
-        if lhs.yy != rhs.yy {
-            return lhs.yy < rhs.yy
-        } else {
-            return lhs.abs() < rhs.abs()
+/// A date in the Hebrew calendar, on or after 1 Tishrei 1 (``HDate/minAbsDate``).
+///
+/// Immutable, so instances can be shared freely across threads.
+public final class HDate: Comparable, Hashable, Codable, Identifiable, Sendable {
+    /// Absolute (R.D.) day number of 1 Tishrei 1, the earliest supported date
+    /// (Monday, 7 October 3761 BCE in the proleptic Julian calendar).
+    public static let minAbsDate: Int64 = epoch + 1
+
+    public let yy: Int
+    public let mm: HebrewMonth
+    public let dd: Int
+    private let absdate: Int64
+
+    /// Creates a Hebrew date. Adar II in a non-leap year is treated as Adar.
+    ///
+    /// - Precondition: The date is on or after 1 Tishrei 1. Use
+    ///   ``init(validatingYY:mm:dd:)`` to get an error instead.
+    public init(yy: Int, mm: HebrewMonth, dd: Int) {
+        let month = (mm == .ADAR_II && !isLeapYear(year: yy)) ? HebrewMonth.ADAR_I : mm
+        let absdate = hebrew2abs(year: yy, month: month, day: dd)
+        precondition(yy >= 1 && absdate >= HDate.minAbsDate, "HDate before 1 Tishrei 1: \(dd) \(month) \(yy)")
+        self.yy = yy
+        self.mm = month
+        self.dd = dd
+        self.absdate = absdate
+    }
+
+    /// Creates a Hebrew date, checking that it is on or after 1 Tishrei 1 and that
+    /// `dd` is a day of the month. Adar II in a non-leap year is treated as Adar.
+    public convenience init(validatingYY yy: Int, mm: HebrewMonth, dd: Int) throws {
+        guard yy >= 1 else {
+            throw HDateError.beforeFirstHebrewDate
         }
+        let month = (mm == .ADAR_II && !isLeapYear(year: yy)) ? HebrewMonth.ADAR_I : mm
+        guard (1...daysInMonth(month: month, year: yy)).contains(dd) else {
+            throw HDateError.dayOutOfRange
+        }
+        self.init(yy: yy, mm: month, dd: dd)
+    }
+
+    /// The Hebrew date of the Gregorian day `date` falls on in `calendar`.
+    ///
+    /// - Precondition: The date is on or after 1 Tishrei 1.
+    public convenience init(date: Date, calendar: Calendar) {
+        self.init(absdate: greg2abs(date: date, calendar: calendar))
+    }
+
+    /// The Hebrew date of the absolute (R.D.) day number `absdate`, checking that
+    /// it is on or after 1 Tishrei 1 (``minAbsDate``).
+    public convenience init(validatingAbsdate absdate: Int64) throws {
+        guard absdate >= HDate.minAbsDate else {
+            throw HDateError.beforeFirstHebrewDate
+        }
+        self.init(absdate: absdate)
+    }
+
+    /// The Hebrew date of the absolute (R.D.) day number `absdate`.
+    ///
+    /// - Precondition: `absdate >= HDate.minAbsDate` (1 Tishrei 1). Use
+    ///   ``init(validatingAbsdate:)`` to get an error instead.
+    public init(absdate: Int64) {
+        precondition(absdate >= HDate.minAbsDate, "HDate before 1 Tishrei 1: absdate \(absdate)")
+        var year = Int(Double(absdate - epoch) / 365.24682220597794)
+        while newYear(year: year) <= absdate {
+            year += 1
+        }
+        year -= 1
+        var month: HebrewMonth = absdate < hebrew2abs(year: year, month: .NISAN, day: 1) ? .TISHREI : .NISAN
+        while absdate > hebrew2abs(year: year, month: month, day: daysInMonth(month: month, year: year)) {
+            month = HebrewMonth(rawValue: month.rawValue + 1)!
+        }
+        self.yy = year
+        self.mm = month
+        self.dd = Int(1 + absdate - hebrew2abs(year: year, month: month, day: 1))
+        self.absdate = absdate
+    }
+
+    // MARK: Comparable, Hashable
+
+    public static func < (lhs: HDate, rhs: HDate) -> Bool {
+        return lhs.absdate < rhs.absdate
     }
 
     public static func == (lhs: HDate, rhs: HDate) -> Bool {
@@ -181,99 +220,92 @@ public class HDate: Comparable, Hashable, Codable, Identifiable {
         hasher.combine(dd)
     }
 
-    public let yy: Int
-    public let mm: HebrewMonth
-    public let dd: Int
-    private var absdate: Int64?
+    // MARK: Codable
 
-    public init(yy: Int, mm: HebrewMonth, dd: Int) {
-        self.yy = yy
-        self.mm = (mm == .ADAR_II && !isLeapYear(year: yy)) ? .ADAR_I : mm
-        self.dd = dd
+    private enum CodingKeys: String, CodingKey {
+        case yy, mm, dd, absdate
     }
 
-    public convenience init(date: Date, calendar: Calendar) {
-        self.init(absdate: greg2abs(date: date, calendar: calendar))
-    }
-
-    public init(absdate: Int64) {
-        self.absdate = absdate
-        let approx = Int(Double(absdate - EPOCH) / 365.24682220597794)
-        var year = approx
-        while (newYear(year: year) <= absdate) {
-            year = year + 1
+    /// Decodes `yy`, `mm` and `dd`. Any encoded `absdate` is ignored and recomputed.
+    /// Throws `DecodingError.dataCorrupted` for a date before 1 Tishrei 1.
+    public convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let yy = try container.decode(Int.self, forKey: .yy)
+        let mm = try container.decode(HebrewMonth.self, forKey: .mm)
+        let dd = try container.decode(Int.self, forKey: .dd)
+        guard yy >= 1 && hebrew2abs(year: yy, month: mm, day: dd) >= HDate.minAbsDate else {
+            throw DecodingError.dataCorruptedError(forKey: .yy, in: container,
+                                                   debugDescription: "HDate before 1 Tishrei 1: \(dd) \(mm) \(yy)")
         }
-        year = year - 1
-        var month = absdate < hebrew2abs(year: year, month: HebrewMonth.NISAN, day: 1) ? HebrewMonth.TISHREI : HebrewMonth.NISAN
-        while (absdate > hebrew2abs(year: year, month: month, day: daysInMonth(month: month, year: year))) {
-            month = HebrewMonth(rawValue: month.rawValue + 1)!
-        }
-        let day = Int(1 + absdate - hebrew2abs(year: year, month: month, day: 1))
-        self.yy = year
-        self.mm = month
-        self.dd = day
+        self.init(yy: yy, mm: mm, dd: dd)
     }
 
+    /// Encodes `absdate` too, so payloads stay readable by older versions of this library.
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(yy, forKey: .yy)
+        try container.encode(mm, forKey: .mm)
+        try container.encode(dd, forKey: .dd)
+        try container.encode(absdate, forKey: .absdate)
+    }
+
+    // MARK: Conversions
+
+    /// The absolute (R.D.) day number of this date.
     public func abs() -> Int64 {
-        if absdate == nil {
-            absdate = hebrew2abs(year: self.yy, month: self.mm, day: self.dd)
-        }
-        return absdate!
+        return absdate
     }
 
-    // Converts this Hebrew Date to a Gregorian Date object.
+    /// This date as a `Date` at midnight in the current calendar.
     public func greg() -> Date {
-        return abs2greg(absdate: self.abs(), calendar: .current)
+        return abs2greg(absdate: absdate, calendar: .current)
     }
 
-    // Dow returns the day of the week specified by hd.
+    /// The day of the week of this date.
     public func dow() -> DayOfWeek {
-        let day = Int(self.abs() % 7)
-        return DayOfWeek(rawValue: day)!
+        return DayOfWeek(rawValue: dayOfWeekIndex(absdate))!
     }
 
-    // Next returns the next Hebrew date.
+    // MARK: Navigation
+
+    /// The next Hebrew date.
     public func next() -> HDate {
-        return HDate(absdate: self.abs() + 1)
+        return HDate(absdate: absdate + 1)
     }
 
-    // Prev returns the previous Hebrew date.
+    /// The previous Hebrew date.
     public func prev() -> HDate {
-        return HDate(absdate: self.abs() - 1)
+        return HDate(absdate: absdate - 1)
     }
 
-    // Before returns an HDate representing the dayOfWeek before
-    // the Hebrew date specified by hd.
+    /// The `dayOfWeek` strictly before this date.
     public func before(dayOfWeek: DayOfWeek) -> HDate {
-        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() - 1))
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: absdate - 1))
     }
 
-    // OnOrBefore returns an HDate corresponding to the dayOfWeek on or before
-    // the Hebrew date specified by hd.
+    /// The `dayOfWeek` on or before this date.
     public func onOrBefore(dayOfWeek: DayOfWeek) -> HDate {
-        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs()))
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: absdate))
     }
 
-    // Nearest returns an HDate representing the nearest dayOfWeek to
-    // the Hebrew date specified by hd.
+    /// The `dayOfWeek` nearest to this date.
     public func nearest(dayOfWeek: DayOfWeek) -> HDate {
-        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() + 3))
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: absdate + 3))
     }
 
-    // OnOrAfter returns an HDate corresponding to the dayOfWeek on or after
-    // the Hebrew date specified by hd.
+    /// The `dayOfWeek` on or after this date.
     public func onOrAfter(dayOfWeek: DayOfWeek) -> HDate {
-        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() + 6))
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: absdate + 6))
     }
 
-    // After returns an HDate corresponding to the dayOfWeek after
-    // the Hebrew date specified by hd.
+    /// The `dayOfWeek` strictly after this date.
     public func after(dayOfWeek: DayOfWeek) -> HDate {
-        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: self.abs() + 7))
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: dayOfWeek, absdate: absdate + 7))
     }
 
+    /// The untranslated month name, e.g. "Sh'vat" or "Adar I".
     public func monthName() -> String {
-        switch self.mm {
+        switch mm {
         case .NISAN: return "Nisan"
         case .IYYAR: return "Iyyar"
         case .SIVAN: return "Sivan"
@@ -285,25 +317,19 @@ public class HDate: Comparable, Hashable, Codable, Identifiable {
         case .KISLEV: return "Kislev"
         case .TEVET: return "Tevet"
         case .SHVAT: return "Sh'vat"
-        case .ADAR_I:
-            return isLeapYear(year: self.yy) ? "Adar I" : "Adar"
-        case .ADAR_II:
-            return "Adar II"
+        case .ADAR_I: return isLeapYear(year: yy) ? "Adar I" : "Adar"
+        case .ADAR_II: return "Adar II"
         }
     }
 }
 
-/**
- * Note: Applying this function to d+6 gives us the DAYNAME on or after an
- * absolute day d. Similarly, applying it to d+3 gives the DAYNAME nearest to
- * absolute date d, applying it to d-1 gives the DAYNAME previous to absolute
- * date d, and applying it to d+7 gives the DAYNAME following absolute date d.
- * @param {number} dayOfWeek
- * @param {number} absdate
- * @return {number}
- */
+/// The absolute day number of the `dayOfWeek` on or before `absdate`.
+///
+/// Applying this to `absdate + 6` gives the `dayOfWeek` on or after `absdate`;
+/// `absdate + 3` gives the nearest; `absdate - 1` the previous; and
+/// `absdate + 7` the following.
 public func dayOnOrBefore(dayOfWeek: DayOfWeek, absdate: Int64) -> Int64 {
-    return absdate - ((absdate - Int64(dayOfWeek.rawValue)) % 7)
+    return absdate - Int64(dayOfWeekIndex(absdate - Int64(dayOfWeek.rawValue)))
 }
 
 extension HDate: CustomStringConvertible {

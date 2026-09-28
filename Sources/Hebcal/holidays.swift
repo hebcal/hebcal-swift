@@ -5,37 +5,37 @@
 
 import Foundation
 
-public struct HolidayFlags: OptionSet {
+public struct HolidayFlags: OptionSet, Sendable {
     public let rawValue: Int32
     public init(rawValue: Int32) {
         self.rawValue = rawValue
     }
-    static public let NONE = HolidayFlags([])
-    static public let CHAG = HolidayFlags(rawValue: 0x000001)
-    static public let LIGHT_CANDLES = HolidayFlags(rawValue: 0x000002)
-    static public let YOM_TOV_ENDS = HolidayFlags(rawValue: 0x000004)
-    static public let CHUL_ONLY = HolidayFlags(rawValue: 0x000008) // chutz l'aretz (Diaspora)
-    static public let IL_ONLY = HolidayFlags(rawValue: 0x000010) // b'aretz (Israel)
-    static public let LIGHT_CANDLES_TZEIS = HolidayFlags(rawValue: 0x000020)
-    static public let CHANUKAH_CANDLES = HolidayFlags(rawValue: 0x000040)
-    static public let ROSH_CHODESH = HolidayFlags(rawValue: 0x000080)
-    static public let MINOR_FAST = HolidayFlags(rawValue: 0x000100)
-    static public let SPECIAL_SHABBAT = HolidayFlags(rawValue: 0x000200)
-    static public let PARSHA_HASHAVUA = HolidayFlags(rawValue: 0x000400)
-    static public let DAF_YOMI = HolidayFlags(rawValue: 0x000800)
-    static public let OMER_COUNT = HolidayFlags(rawValue: 0x001000)
-    static public let MODERN_HOLIDAY = HolidayFlags(rawValue: 0x002000)
-    static public let MAJOR_FAST = HolidayFlags(rawValue: 0x004000)
-    static public let SHABBAT_MEVARCHIM = HolidayFlags(rawValue: 0x008000)
-    static public let MOLAD = HolidayFlags(rawValue: 0x010000)
-    static public let USER_EVENT = HolidayFlags(rawValue: 0x020000)
-    static public let HEBREW_DATE = HolidayFlags(rawValue: 0x040000)
-    static public let MINOR_HOLIDAY = HolidayFlags(rawValue: 0x080000)
-    static public let EREV = HolidayFlags(rawValue: 0x100000)
-    static public let CHOL_HAMOED = HolidayFlags(rawValue: 0x200000)
+    public static let NONE = HolidayFlags([])
+    public static let CHAG = HolidayFlags(rawValue: 0x000001)
+    public static let LIGHT_CANDLES = HolidayFlags(rawValue: 0x000002)
+    public static let YOM_TOV_ENDS = HolidayFlags(rawValue: 0x000004)
+    public static let CHUL_ONLY = HolidayFlags(rawValue: 0x000008) // chutz l'aretz (Diaspora)
+    public static let IL_ONLY = HolidayFlags(rawValue: 0x000010) // b'aretz (Israel)
+    public static let LIGHT_CANDLES_TZEIS = HolidayFlags(rawValue: 0x000020)
+    public static let CHANUKAH_CANDLES = HolidayFlags(rawValue: 0x000040)
+    public static let ROSH_CHODESH = HolidayFlags(rawValue: 0x000080)
+    public static let MINOR_FAST = HolidayFlags(rawValue: 0x000100)
+    public static let SPECIAL_SHABBAT = HolidayFlags(rawValue: 0x000200)
+    public static let PARSHA_HASHAVUA = HolidayFlags(rawValue: 0x000400)
+    public static let DAF_YOMI = HolidayFlags(rawValue: 0x000800)
+    public static let OMER_COUNT = HolidayFlags(rawValue: 0x001000)
+    public static let MODERN_HOLIDAY = HolidayFlags(rawValue: 0x002000)
+    public static let MAJOR_FAST = HolidayFlags(rawValue: 0x004000)
+    public static let SHABBAT_MEVARCHIM = HolidayFlags(rawValue: 0x008000)
+    public static let MOLAD = HolidayFlags(rawValue: 0x010000)
+    public static let USER_EVENT = HolidayFlags(rawValue: 0x020000)
+    public static let HEBREW_DATE = HolidayFlags(rawValue: 0x040000)
+    public static let MINOR_HOLIDAY = HolidayFlags(rawValue: 0x080000)
+    public static let EREV = HolidayFlags(rawValue: 0x100000)
+    public static let CHOL_HAMOED = HolidayFlags(rawValue: 0x200000)
 }
 
-public struct HEvent: Comparable {
+public struct HEvent: Comparable, Sendable {
     public static func < (lhs: HEvent, rhs: HEvent) -> Bool {
         return lhs.hdate < rhs.hdate
     }
@@ -56,13 +56,14 @@ public struct HEvent: Comparable {
     }
 }
 
-struct Holiday {
+/// A holiday on a fixed Hebrew date.
+private struct Holiday {
     let mm: HebrewMonth
     let dd: Int
     let desc: String
     let flags: HolidayFlags
     let emoji: String?
-    public init(mm: HebrewMonth, dd: Int, desc: String, flags: HolidayFlags? = .NONE, emoji: String? = nil) {
+    init(mm: HebrewMonth, dd: Int, desc: String, flags: HolidayFlags? = .NONE, emoji: String? = nil) {
         self.mm = mm
         self.dd = dd
         self.desc = desc
@@ -71,11 +72,11 @@ struct Holiday {
     }
 }
 
-let chanukahEmoji = "🕎"
-let sukkotEmoji = "🌿🍋";
-let pesachEmoji = "🫓";
+private let chanukahEmoji = "🕎"
+private let sukkotEmoji = "🌿🍋"
+private let pesachEmoji = "🫓"
 
-let staticHolidays: [Holiday] = [
+private let staticHolidays: [Holiday] = [
     Holiday(mm: .TISHREI, dd: 1, desc: "Rosh Hashana",
             flags: [.CHAG,  .LIGHT_CANDLES_TZEIS], emoji: "🍏🍯"),
     Holiday(mm: .TISHREI, dd: 2, desc: "Rosh Hashana II",
@@ -212,7 +213,8 @@ let staticHolidays: [Holiday] = [
 ]
 
 
-struct ModernHoliday {
+/// An Israeli national holiday, with rules for moving it off Friday/Saturday.
+private struct ModernHoliday {
     let h: Holiday
     let firstYear: Int
     let chul: Bool
@@ -223,7 +225,7 @@ struct ModernHoliday {
 }
 
 
-let staticModernHolidays: [ModernHoliday] = [
+private let staticModernHolidays: [ModernHoliday] = [
     ModernHoliday(h: Holiday(mm: .IYYAR, dd: 28, desc: "Yom Yerushalayim"),
                   firstYear: 5727,
                   chul: true,
@@ -281,20 +283,24 @@ let staticModernHolidays: [ModernHoliday] = [
 ]
 
 
-public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
-    let events = getAllHolidaysForYear(year: year)
-    let result = events.filter {
-        (il && !$0.flags.contains(.CHUL_ONLY)) || (!il && !$0.flags.contains(.IL_ONLY))
+extension HEvent {
+    /// Whether this event is observed in Israel (`il`) or the Diaspora.
+    func isObserved(il: Bool) -> Bool {
+        return !flags.contains(il ? .CHUL_ONLY : .IL_ONLY)
     }
-    return result
 }
 
+/// The holidays of the Hebrew `year` observed in Israel (`il`) or the Diaspora, in date order.
+public func getHolidaysForYear(year: Int, il: Bool) -> [HEvent] {
+    return getAllHolidaysForYear(year: year).filter { $0.isObserved(il: il) }
+}
+
+/// All holidays of the Hebrew `year`, both Israel-only (`IL_ONLY`) and
+/// Diaspora-only (`CHUL_ONLY`), in date order.
 public func getAllHolidaysForYear(year: Int) -> [HEvent] {
-    var events = [HEvent]()
     // standard holidays that don't shift based on year
-    for h in staticHolidays {
-        events.append(HEvent(hdate: HDate(yy: year, mm: h.mm, dd: h.dd),
-                             desc: h.desc, flags: h.flags, emoji: h.emoji))
+    var events = staticHolidays.map {
+        HEvent(hdate: HDate(yy: year, mm: $0.mm, dd: $0.dd), desc: $0.desc, flags: $0.flags, emoji: $0.emoji)
     }
     // variable holidays
     let RH = HDate(yy: year, mm: .TISHREI, dd: 1)
@@ -396,17 +402,12 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
     // modern holidays
     if year >= 5708 {
         // Yom HaAtzma'ut only celebrated after 1948
-        var day: Int
-        if (pesach.dow() == .SUN) {
-            day = 2
-        } else if (pesach.dow() == .SAT) {
-            day = 3
-        } else if (year < 5764) {
-            day = 4
-        } else if (pesach.dow() == .TUE) {
-            day = 5
-        } else {
-            day = 4
+        let day: Int
+        switch pesach.dow() {
+        case .SUN: day = 2
+        case .SAT: day = 3
+        case .TUE where year >= 5764: day = 5
+        default: day = 4
         }
         let tmpDate = HDate(yy: year, mm: .IYYAR, dd: day)
         events.append(contentsOf: [
@@ -432,22 +433,20 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
         events.append(HEvent(hdate: nisan27dt, desc: "Yom HaShoah", flags: .MODERN_HOLIDAY))
     }
 
-    for mh in staticModernHolidays {
-        if year >= mh.firstYear {
-            let h = mh.h
-            let emoji = mh.suppressEmoji ? nil : "🇮🇱"
-            let flags = mh.chul ? HolidayFlags.MODERN_HOLIDAY : [HolidayFlags.MODERN_HOLIDAY, HolidayFlags.IL_ONLY]
-            var hd = HDate(yy: year, mm: h.mm, dd: h.dd)
-            let dow = hd.dow()
-            if mh.friSatMovetoThu && (dow == .FRI || dow == .SAT) {
-                hd = hd.onOrBefore(dayOfWeek: .THU)
-            } else if mh.friPostponeToSun && dow == .FRI {
-                hd = hd.next().next()
-            } else if mh.satPostponeToSun && dow == .SAT {
-                hd = hd.next()
-            }
-            events.append(HEvent(hdate: hd, desc: h.desc, flags: flags, emoji: emoji))
+    for mh in staticModernHolidays where year >= mh.firstYear {
+        let h = mh.h
+        let emoji = mh.suppressEmoji ? nil : "🇮🇱"
+        let flags: HolidayFlags = mh.chul ? .MODERN_HOLIDAY : [.MODERN_HOLIDAY, .IL_ONLY]
+        var hd = HDate(yy: year, mm: h.mm, dd: h.dd)
+        let dow = hd.dow()
+        if mh.friSatMovetoThu && (dow == .FRI || dow == .SAT) {
+            hd = hd.onOrBefore(dayOfWeek: .THU)
+        } else if mh.friPostponeToSun && dow == .FRI {
+            hd = hd.next().next()
+        } else if mh.satPostponeToSun && dow == .SAT {
+            hd = hd.next()
         }
+        events.append(HEvent(hdate: hd, desc: h.desc, flags: flags, emoji: emoji))
     }
 
     // Rosh Chodesh
@@ -479,22 +478,15 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
     return events
 }
 
+/// The holidays on `hdate` observed in Israel (`il`) or the Diaspora.
 public func getHolidaysOnDate(hdate: HDate, il: Bool) -> [HEvent] {
-    let events = getAllHolidaysForYear(year: hdate.yy)
-    return getHolidaysOnDate(events: events, hdate: hdate, il: il)
+    return getHolidaysOnDate(events: getAllHolidaysForYear(year: hdate.yy), hdate: hdate, il: il)
 }
 
+/// The holidays on `hdate` observed in Israel (`il`) or the Diaspora, from
+/// `events` sorted in date order (e.g. from `getAllHolidaysForYear(year:)`).
 public func getHolidaysOnDate(events: [HEvent], hdate: HDate, il: Bool) -> [HEvent] {
-    var result = [HEvent]()
-    for ev in events {
-        if ev.hdate == hdate {
-            let f = ev.flags
-            if (il && !f.contains(.CHUL_ONLY)) || (!il && !f.contains(.IL_ONLY)) {
-                result.append(ev)
-            }
-        } else if ev.hdate > hdate {
-            break
-        }
-    }
-    return result
+    return events
+        .prefix { $0.hdate <= hdate }
+        .filter { $0.hdate == hdate && $0.isObserved(il: il) }
 }
