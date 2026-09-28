@@ -218,7 +218,6 @@ private struct ModernHoliday {
     let h: Holiday
     let firstYear: Int
     let chul: Bool
-    let suppressEmoji: Bool
     let friSatMovetoThu: Bool
     let satPostponeToSun: Bool
     let friPostponeToSun: Bool
@@ -229,55 +228,46 @@ private let staticModernHolidays: [ModernHoliday] = [
     ModernHoliday(h: Holiday(mm: .IYYAR, dd: 28, desc: "Yom Yerushalayim"),
                   firstYear: 5727,
                   chul: true,
-                  suppressEmoji: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: false, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .KISLEV, dd: 6, desc: "Ben-Gurion Day"),
                   firstYear: 5737,
                   chul: false,
-                  suppressEmoji: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: true, friPostponeToSun: true),
     ModernHoliday(h: Holiday(mm: .SHVAT, dd: 30, desc: "Family Day"),
                   firstYear: 5750,
                   chul: false,
-                  suppressEmoji: true,
                   friSatMovetoThu: false,
                   satPostponeToSun: false, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .CHESHVAN, dd: 12, desc: "Yitzhak Rabin Memorial Day"),
                   firstYear: 5758,
                   chul: false,
-                  suppressEmoji: false,
                   friSatMovetoThu: true,
                   satPostponeToSun: false, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .IYYAR, dd: 10, desc: "Herzl Day"),
                   firstYear: 5764,
                   chul: false,
-                  suppressEmoji: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: true, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .TAMUZ, dd: 29, desc: "Jabotinsky Day"),
                   firstYear: 5765,
                   chul: false,
-                  suppressEmoji: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: true, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .CHESHVAN, dd: 29, desc: "Sigd"),
                   firstYear: 5769,
                   chul: true,
-                  suppressEmoji: true,
                   friSatMovetoThu: true,
                   satPostponeToSun: false, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .NISAN, dd: 10, desc: "Yom HaAliyah"),
                   firstYear: 5777,
                   chul: true,
-                  suppressEmoji: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: false, friPostponeToSun: false),
     ModernHoliday(h: Holiday(mm: .CHESHVAN, dd: 7, desc: "Yom HaAliyah School Observance"),
                   firstYear: 5777,
                   chul: false,
-                  suppressEmoji: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: false, friPostponeToSun: false),
 ]
@@ -435,7 +425,6 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
 
     for mh in staticModernHolidays where year >= mh.firstYear {
         let h = mh.h
-        let emoji = mh.suppressEmoji ? nil : "🇮🇱"
         let flags: HolidayFlags = mh.chul ? .MODERN_HOLIDAY : [.MODERN_HOLIDAY, .IL_ONLY]
         var hd = HDate(yy: year, mm: h.mm, dd: h.dd)
         let dow = hd.dow()
@@ -446,7 +435,7 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
         } else if mh.satPostponeToSun && dow == .SAT {
             hd = hd.next()
         }
-        events.append(HEvent(hdate: hd, desc: h.desc, flags: flags, emoji: emoji))
+        events.append(HEvent(hdate: hd, desc: h.desc, flags: flags, emoji: "🇮🇱"))
     }
 
     // Rosh Chodesh
