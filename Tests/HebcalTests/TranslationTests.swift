@@ -23,6 +23,16 @@ struct TranslationTests {
         #expect(lookupTranslation(str: str, lang: lang) == expected)
     }
 
+    /// Plain Hebrew (.he) never carries nikud; that's what .heNikud is for.
+    @Test func hebrewHolidaysHaveNoNikud() {
+        // Points and cantillation marks, U+0591–U+05C7, less the maqaf (־).
+        let nikud = Set((0x0591...0x05C7).compactMap(Unicode.Scalar.init)).subtracting(["\u{05BE}"])
+        let withNikud = getAllHolidaysForYear(year: 5787)
+            .map { lookupTranslation(str: $0.desc, lang: .he) }
+            .filter { $0.unicodeScalars.contains(where: nikud.contains) }
+        #expect(withNikud.isEmpty, "\(withNikud)")
+    }
+
     @Test(arguments: [
         (TranslationLang.en, "29 Tevet 5771"),
         (.ashkenazi, "29 Teves 5771"),

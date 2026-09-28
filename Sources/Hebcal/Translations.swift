@@ -279,11 +279,11 @@ private let heTranslations = [
     "Tish'a B'Av (observed)": "תשעה באב נדחה",
     "Shabbat Mevarchim Chodesh": "שבת מברכים חודש",
     "Shabbat Shirah": "שבת שירה",
-    "Family Day": "יוֹם המשפחה",
-    "Yitzhak Rabin Memorial Day": "יוֹם הַזִּכָּרוֹן ליצחק רבין",
-    "Jabotinsky Day": "יוֹם ז׳בוטינסקי",
-    "Herzl Day": "יוֹם הרצל",
-    "Ben-Gurion Day": "יוֹם בן־גוריון",
+    "Family Day": "יום המשפחה",
+    "Yitzhak Rabin Memorial Day": "יום הזכרון ליצחק רבין",
+    "Jabotinsky Day": "יום ז׳בוטינסקי",
+    "Herzl Day": "יום הרצל",
+    "Ben-Gurion Day": "יום בן־גוריון",
 ]
 
 private let parshaNikud = [
