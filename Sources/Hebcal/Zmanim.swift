@@ -40,6 +40,25 @@ public struct Zmanim {
         }
     }
 
+    /// Sea-level sunset (not rounded), e.g. for deciding when the Hebrew date changes.
+    /// Returns `nil` if the sun does not set on that date.
+    public static func getSunset(for date: Date, latitude: Double, longitude: Double, timeZone: TimeZone) -> Date? {
+        return astronomicalCalendar(for: date, latitude: latitude, longitude: longitude, timeZone: timeZone)
+            .getSeaLevelSunset()
+    }
+
+    /// Bein hashmashot according to Rabbeinu Tam: 13.5 minutes before tzeit 7.083°
+    /// (3 medium-sized stars), rounded to the nearest minute. Used for weekday Chanukah
+    /// candle lighting, matching `@hebcal/core`'s `Zmanim.beinHaShmashos()`.
+    /// Returns `nil` if the sun does not reach 7.083° below the horizon on that date.
+    public static func getBeinHaShmashosTime(for date: Date, latitude: Double, longitude: Double, timeZone: TimeZone) -> Date? {
+        let astro = astronomicalCalendar(for: date, latitude: latitude, longitude: longitude, timeZone: timeZone)
+        guard let tzeit = astro.getSunsetOffsetByDegrees(NOAACalculator.geometricZenith + 7.083) else {
+            return nil
+        }
+        return roundTime(tzeit.addingTimeInterval(-13.5 * 60))
+    }
+
     private static func astronomicalCalendar(for date: Date, latitude: Double, longitude: Double, timeZone: TimeZone) -> AstronomicalCalendar {
         let geoLocation = GeoLocation(latitude: latitude, longitude: longitude, timeZone: timeZone)
         return AstronomicalCalendar(geoLocation: geoLocation, date: date)

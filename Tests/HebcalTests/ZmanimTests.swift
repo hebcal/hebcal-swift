@@ -153,6 +153,42 @@ struct ZmanimTests {
         assertTime(havdalah(tromso, date(2023, 12, 2, tromso), .degreesBelowHorizon(angle: 8.5)), "2023-12-02T14:58:00+01:00")
     }
 
+    // MARK: - Bein hashmashot
+
+    // Expected: Zmanim.roundTime(z.beinHaShmashos()) from @hebcal/core
+    func beinHaShmashos(_ place: Place, _ date: Date) -> Date? {
+        return Zmanim.getBeinHaShmashosTime(for: date, latitude: place.latitude, longitude: place.longitude,
+                                            timeZone: place.timeZone)
+    }
+
+    @Test func beinHaShmashos_Winter() {
+        assertTime(beinHaShmashos(newYork, date(2026, 12, 7, newYork)), "2026-12-07T21:52:00Z")
+        assertTime(beinHaShmashos(jerusalem, date(2026, 12, 7, jerusalem)), "2026-12-07T14:54:00Z")
+        assertTime(beinHaShmashos(sydney, date(2026, 12, 7, sydney)), "2026-12-07T09:18:00Z")
+        assertTime(beinHaShmashos(helsinki, date(2026, 12, 7, helsinki)), "2026-12-07T14:09:00Z")
+        assertTime(beinHaShmashos(tromso, date(2026, 12, 7, tromso)), "2026-12-07T13:11:00Z")
+    }
+
+    @Test func beinHaShmashos_Summer() {
+        assertTime(beinHaShmashos(newYork, date(2027, 6, 21, newYork)), "2027-06-22T00:58:00Z")
+        assertTime(beinHaShmashos(jerusalem, date(2027, 6, 21, jerusalem)), "2027-06-21T17:08:00Z")
+        assertTime(beinHaShmashos(sydney, date(2027, 6, 21, sydney)), "2027-06-21T07:14:00Z")
+    }
+
+    @Test func beinHaShmashos_WhiteNight() {
+        #expect(beinHaShmashos(helsinki, date(2027, 6, 21, helsinki)) == nil)
+        #expect(beinHaShmashos(tromso, date(2027, 6, 21, tromso)) == nil)
+    }
+
+    @Test func sunset_NotRounded() {
+        // Sunset 16:29:20 EST (see candleLighting_NewYork)
+        let sunset = Zmanim.getSunset(for: date(2023, 12, 1, newYork), latitude: newYork.latitude,
+                                      longitude: newYork.longitude, timeZone: newYork.timeZone)
+        assertTime(sunset, "2023-12-01T16:29:20-05:00")
+        #expect(Zmanim.getSunset(for: date(2023, 6, 1, alert), latitude: alert.latitude,
+                                 longitude: alert.longitude, timeZone: alert.timeZone) == nil)
+    }
+
     // MARK: - Rounding
 
     @Test func sunsetOffsetRounding() {
