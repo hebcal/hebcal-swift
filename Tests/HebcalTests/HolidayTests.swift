@@ -11,13 +11,13 @@ struct HolidayTests {
     }
 
     @Test func allHolidaysCount() {
-        #expect(getAllHolidaysForYear(year: 5783).count == 106)
+        #expect(getAllHolidaysForYear(year: 5783).count == 122)
     }
 
     @Test(arguments: [
-        (5782, false, 87), (5782, true, 90),
-        (5783, false, 85), (5783, true, 88),
-        (5784, false, 86), (5784, true, 89),
+        (5782, false, 104), (5782, true, 108),
+        (5783, false, 100), (5783, true, 104),
+        (5784, false, 103), (5784, true, 107),
     ])
     func holidaysForYearCount(year: Int, il: Bool, expected: Int) {
         #expect(getHolidaysForYear(year: year, il: il).count == expected)
@@ -30,6 +30,7 @@ struct HolidayTests {
             "2022-11-06 Yitzhak Rabin Memorial Day",
             "2022-11-23 Sigd",
             "2022-11-30 Ben-Gurion Day",
+            "2023-01-12 Hebrew Language Day",
             "2023-02-21 Family Day",
             "2023-04-01 Yom HaAliyah",
             "2023-04-18 Yom HaShoah",
@@ -57,6 +58,30 @@ struct HolidayTests {
         let holidays = getHolidaysForYear(year: 5781, il: true)
         let ev = try #require(holidays.first { $0.desc == "Yitzhak Rabin Memorial Day" })
         #expect(ev.hdate.description == "11 Cheshvan 5781")
+    }
+
+    @Test func hebrewLanguageDay() throws {
+        let desc = "Hebrew Language Day"
+        #expect(getHolidaysForYear(year: 5772, il: true).first { $0.desc == desc } == nil)
+        // 21 Tevet 5783 falls on Shabbat, so it moves back to Thursday
+        let ev = try #require(getHolidaysForYear(year: 5783, il: true).first { $0.desc == desc })
+        #expect(ev.hdate.description == "19 Tevet 5783")
+        #expect(ev.hdate.dow() == .THU)
+        #expect(ev.flags == [.MODERN_HOLIDAY, .IL_ONLY])
+        #expect(ev.emoji == "🇮🇱")
+        #expect(getHolidaysForYear(year: 5783, il: false).first { $0.desc == desc } == nil)
+    }
+
+    @Test func birkatHachamah() throws {
+        let years = (5650...5920).filter { year in
+            getHolidaysForYear(year: year, il: false).contains { $0.desc == "Birkat Hachamah" }
+        }
+        #expect(years == [5657, 5685, 5713, 5741, 5769, 5797, 5825, 5853, 5881, 5909])
+        let ev1 = try #require(getHolidaysForYear(year: 5965, il: false).first { $0.desc == "Birkat Hachamah" })
+        #expect(ev1.hdate.description == "19 Nisan 5965")
+        #expect(ev1.emoji == "☀️")
+        let ev2 = try #require(getHolidaysForYear(year: 5993, il: false).first { $0.desc == "Birkat Hachamah" })
+        #expect(ev2.hdate.description == "29 Adar II 5993")
     }
 
     @Test func swordsOfIronWarMemorialDay() throws {
@@ -122,7 +147,11 @@ struct HolidayTests {
             "2010-10-01 Simchat Torah",
             "2010-10-08 Rosh Chodesh Cheshvan",
             "2010-10-09 Rosh Chodesh Cheshvan",
+            "2010-10-18 Ta'anit BeHaB",
+            "2010-10-21 Ta'anit BeHaB",
+            "2010-10-25 Ta'anit BeHaB",
             "2010-11-04 Sigd",
+            "2010-11-04 Yom Kippur Katan Kislev",
             "2010-11-07 Rosh Chodesh Kislev",
             "2010-11-08 Rosh Chodesh Kislev",
             "2010-12-01 Chanukah: 1 Candle",
@@ -133,16 +162,21 @@ struct HolidayTests {
             "2010-12-06 Chanukah: 6 Candles",
             "2010-12-07 Chanukah: 7 Candles",
             "2010-12-07 Rosh Chodesh Tevet",
+            "2010-12-07 Chag HaBanot",
             "2010-12-08 Chanukah: 8 Candles",
             "2010-12-08 Rosh Chodesh Tevet",
             "2010-12-09 Chanukah: 8th Day",
             "2010-12-17 Asara B'Tevet",
+            "2011-01-05 Yom Kippur Katan Sh'vat",
             "2011-01-06 Rosh Chodesh Sh'vat",
             "2011-01-15 Shabbat Shirah",
             "2011-01-20 Tu BiShvat",
+            "2011-02-03 Yom Kippur Katan Adar I",
             "2011-02-04 Rosh Chodesh Adar I",
             "2011-02-05 Rosh Chodesh Adar I",
             "2011-02-18 Purim Katan",
+            "2011-02-19 Shushan Purim Katan",
+            "2011-03-03 Yom Kippur Katan Adar II",
             "2011-03-05 Shabbat Shekalim",
             "2011-03-06 Rosh Chodesh Adar II",
             "2011-03-07 Rosh Chodesh Adar II",
@@ -153,6 +187,7 @@ struct HolidayTests {
             "2011-03-21 Shushan Purim",
             "2011-03-26 Shabbat Parah",
             "2011-04-02 Shabbat HaChodesh",
+            "2011-04-04 Yom Kippur Katan Nisan",
             "2011-04-05 Rosh Chodesh Nisan",
             "2011-04-16 Shabbat HaGadol",
             "2011-04-18 Erev Pesach",
@@ -169,23 +204,30 @@ struct HolidayTests {
             "2011-05-04 Rosh Chodesh Iyyar",
             "2011-05-05 Rosh Chodesh Iyyar",
             "2011-05-09 Yom HaZikaron",
+            "2011-05-09 Ta'anit BeHaB",
             "2011-05-10 Yom HaAtzma'ut",
+            "2011-05-12 Ta'anit BeHaB",
+            "2011-05-16 Ta'anit BeHaB",
             "2011-05-18 Pesach Sheni",
             "2011-05-22 Lag BaOmer",
             "2011-06-01 Yom Yerushalayim",
+            "2011-06-02 Yom Kippur Katan Sivan",
             "2011-06-03 Rosh Chodesh Sivan",
             "2011-06-07 Erev Shavuot",
             "2011-06-08 Shavuot I",
             "2011-06-09 Shavuot II",
+            "2011-06-30 Yom Kippur Katan Tamuz",
             "2011-07-02 Rosh Chodesh Tamuz",
             "2011-07-03 Rosh Chodesh Tamuz",
             "2011-07-19 Tzom Tammuz",
+            "2011-07-31 Yom Kippur Katan Av",
             "2011-08-01 Rosh Chodesh Av",
             "2011-08-06 Shabbat Chazon",
             "2011-08-08 Erev Tish'a B'Av",
             "2011-08-09 Tish'a B'Av",
             "2011-08-13 Shabbat Nachamu",
             "2011-08-15 Tu B'Av",
+            "2011-08-29 Yom Kippur Katan Elul",
             "2011-08-30 Rosh Chodesh Elul",
             "2011-08-31 Rosh Hashana LaBehemot",
             "2011-08-31 Rosh Chodesh Elul",
@@ -213,6 +255,10 @@ struct HolidayTests {
             "1959-10-24 Shmini Atzeret",
             "1959-11-01 Rosh Chodesh Cheshvan",
             "1959-11-02 Rosh Chodesh Cheshvan",
+            "1959-11-09 Ta'anit BeHaB",
+            "1959-11-12 Ta'anit BeHaB",
+            "1959-11-16 Ta'anit BeHaB",
+            "1959-11-30 Yom Kippur Katan Kislev",
             "1959-12-01 Rosh Chodesh Kislev",
             "1959-12-02 Rosh Chodesh Kislev",
             "1959-12-25 Chanukah: 1 Candle",
@@ -223,13 +269,16 @@ struct HolidayTests {
             "1959-12-30 Chanukah: 6 Candles",
             "1959-12-31 Chanukah: 7 Candles",
             "1959-12-31 Rosh Chodesh Tevet",
+            "1959-12-31 Chag HaBanot",
             "1960-01-01 Chanukah: 8 Candles",
             "1960-01-01 Rosh Chodesh Tevet",
             "1960-01-02 Chanukah: 8th Day",
             "1960-01-10 Asara B'Tevet",
+            "1960-01-28 Yom Kippur Katan Sh'vat",
             "1960-01-30 Rosh Chodesh Sh'vat",
             "1960-02-13 Tu BiShvat",
             "1960-02-13 Shabbat Shirah",
+            "1960-02-25 Yom Kippur Katan Adar",
             "1960-02-27 Shabbat Shekalim",
             "1960-02-28 Rosh Chodesh Adar",
             "1960-02-29 Rosh Chodesh Adar",
@@ -240,6 +289,7 @@ struct HolidayTests {
             "1960-03-14 Shushan Purim",
             "1960-03-19 Shabbat Parah",
             "1960-03-26 Shabbat HaChodesh",
+            "1960-03-28 Yom Kippur Katan Nisan",
             "1960-03-29 Rosh Chodesh Nisan",
             "1960-04-09 Shabbat HaGadol",
             "1960-04-11 Erev Pesach",
@@ -256,20 +306,27 @@ struct HolidayTests {
             "1960-04-28 Rosh Chodesh Iyyar",
             "1960-05-01 Yom HaZikaron",
             "1960-05-02 Yom HaAtzma'ut",
+            "1960-05-02 Ta'anit BeHaB",
+            "1960-05-05 Ta'anit BeHaB",
+            "1960-05-09 Ta'anit BeHaB",
             "1960-05-11 Pesach Sheni",
             "1960-05-15 Lag BaOmer",
+            "1960-05-26 Yom Kippur Katan Sivan",
             "1960-05-27 Rosh Chodesh Sivan",
             "1960-05-31 Erev Shavuot",
             "1960-06-01 Shavuot",
+            "1960-06-23 Yom Kippur Katan Tamuz",
             "1960-06-25 Rosh Chodesh Tamuz",
             "1960-06-26 Rosh Chodesh Tamuz",
             "1960-07-12 Tzom Tammuz",
+            "1960-07-24 Yom Kippur Katan Av",
             "1960-07-25 Rosh Chodesh Av",
             "1960-07-30 Shabbat Chazon",
             "1960-08-01 Erev Tish'a B'Av",
             "1960-08-02 Tish'a B'Av",
             "1960-08-06 Shabbat Nachamu",
             "1960-08-08 Tu B'Av",
+            "1960-08-22 Yom Kippur Katan Elul",
             "1960-08-23 Rosh Chodesh Elul",
             "1960-08-24 Rosh Hashana LaBehemot",
             "1960-08-24 Rosh Chodesh Elul",

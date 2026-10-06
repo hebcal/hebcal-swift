@@ -33,6 +33,8 @@ public struct HolidayFlags: OptionSet, Sendable {
     public static let MINOR_HOLIDAY = HolidayFlags(rawValue: 0x080000)
     public static let EREV = HolidayFlags(rawValue: 0x100000)
     public static let CHOL_HAMOED = HolidayFlags(rawValue: 0x200000)
+    public static let YOM_KIPPUR_KATAN = HolidayFlags(rawValue: 0x800000)
+    public static let BEHAB = HolidayFlags(rawValue: 0x10000000)
 }
 
 public struct HEvent: Comparable, Sendable {
@@ -270,6 +272,12 @@ private let staticModernHolidays: [ModernHoliday] = [
                   chul: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: false, friPostponeToSun: false),
+    // https://www.gov.il/he/departments/policies/2012_des5234
+    ModernHoliday(h: Holiday(mm: .TEVET, dd: 21, desc: "Hebrew Language Day"),
+                  firstYear: 5773,
+                  chul: false,
+                  friSatMovetoThu: true,
+                  satPostponeToSun: false, friPostponeToSun: false),
     // https://fs.knesset.gov.il/25/law/25_lsr_14184773.pdf
     // (Published in Sefer HaChukim No. 3567 on 8 Av 5786 / July 22, 2026)
     ModernHoliday(h: Holiday(mm: .TISHREI, dd: 24, desc: "Swords of Iron War Memorial Day"),
@@ -342,6 +350,8 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
     if isLeapYear(year: year) {
         events.append(HEvent(hdate: HDate(yy: year, mm: .ADAR_I, dd: 14),
                              desc: "Purim Katan", flags: .MINOR_HOLIDAY, emoji: "🎭️"))
+        events.append(HEvent(hdate: HDate(yy: year, mm: .ADAR_I, dd: 15),
+                             desc: "Shushan Purim Katan", flags: .MINOR_HOLIDAY, emoji: "🎭️"))
     }
     // chanukah
     for i in 2...6 {
@@ -470,8 +480,82 @@ public func getAllHolidaysForYear(year: Int) -> [HEvent] {
     events.append(HEvent(hdate: beshalachHd, desc: "Shabbat Shirah", flags: .SPECIAL_SHABBAT,
                          emoji: "🕍"))
 
+    // Chag HaBanot falls on the first day of Rosh Chodesh Tevet (same day as Chanukah: 7 Candles)
+    events.append(HEvent(hdate: chanukah7, desc: "Chag HaBanot", flags: .MINOR_HOLIDAY))
+    events.append(contentsOf: yomKippurKatanEvents(year: year))
+    events.append(contentsOf: behabEvents(year: year))
+    if let birkatHaChama = birkatHaChamaAbs(year: year) {
+        events.append(HEvent(hdate: HDate(absdate: birkatHaChama), desc: "Birkat Hachamah",
+                             flags: .MINOR_HOLIDAY, emoji: "☀️"))
+    }
+
     events.sort()
     return events
+}
+
+/// Yom Kippur Katan, the minor day of atonement on the day preceding each Rosh Chodesh.
+private func yomKippurKatanEvents(year: Int) -> [HEvent] {
+    var events: [HEvent] = []
+    let numMonths = monthsInYear(year: year)
+    // start at Iyyar because one may not fast during Nisan
+    for i in HebrewMonth.IYYAR.rawValue...numMonths {
+        let month = HebrewMonth(rawValue: i)!
+        let nextMonth = i == numMonths ? HebrewMonth.NISAN : HebrewMonth(rawValue: i + 1)!
+        // Not observed on the day before Rosh Hashana.
+        // Not observed prior to Rosh Chodesh Cheshvan because Yom Kippur has just passed.
+        // Not observed before Rosh Chodesh Tevet, because that day is Chanukah.
+        if nextMonth == .TISHREI || nextMonth == .CHESHVAN || nextMonth == .TEVET {
+            continue
+        }
+        var ykk = HDate(yy: year, mm: month, dd: 29)
+        let dow = ykk.dow()
+        if dow == .FRI || dow == .SAT {
+            ykk = ykk.onOrBefore(dayOfWeek: .THU)
+        }
+        let nextMonthName = HDate(yy: year, mm: nextMonth, dd: 1).monthName()
+        events.append(HEvent(hdate: ykk, desc: "Yom Kippur Katan \(nextMonthName)",
+                             flags: [.MINOR_FAST, .YOM_KIPPUR_KATAN]))
+    }
+    return events
+}
+
+/// Ta'anit BeHaB: the Monday, Thursday, Monday fasts after Pesach and Sukkot.
+private func behabEvents(year: Int) -> [HEvent] {
+    var events: [HEvent] = []
+    for month in [HebrewMonth.CHESHVAN, .IYYAR] {
+        let roshChodesh = HDate(yy: year, mm: month, dd: 1).abs()
+        var shabbos = dayOnOrBefore(dayOfWeek: .SAT, absdate: roshChodesh + 6)
+        if shabbos == roshChodesh {
+            shabbos += 7
+        }
+        var fastDays = [2, 5, 9].map { HDate(absdate: shabbos + Int64($0)) }
+        if month == .IYYAR && fastDays[2].dd == 14 {
+            fastDays[2] = HDate(yy: year, mm: .IYYAR, dd: 17)
+        }
+        for hd in fastDays {
+            events.append(HEvent(hdate: hd, desc: "Ta'anit BeHaB", flags: [.MINOR_FAST, .BEHAB]))
+        }
+    }
+    return events
+}
+
+/// 28 years of 365.25 days
+private let birkatHaChamaCycleDays: Int64 = 10227
+private let birkatHaChamaEpochOffset: Int64 = 1373429
+private let birkatHaChamaRemainder: Int64 = 172
+
+/// Birkat Hachamah appears only once every 28 years. Although almost always in
+/// Nisan, it can occur in Adar II (27 Adar II 5461, 29 Adar II 5993).
+private func birkatHaChamaAbs(year: Int) -> Int64? {
+    let leap = isLeapYear(year: year)
+    let baseRd = hebrew2abs(year: year, month: leap ? .ADAR_II : .NISAN, day: leap ? 20 : 1)
+    for day in Int64(0)...40 {
+        let abs = baseRd + day
+        if (abs + birkatHaChamaEpochOffset) % birkatHaChamaCycleDays == birkatHaChamaRemainder {
+            return abs
+        }
+    }
+    return nil
 }
 
 /// The holidays on `hdate` observed in Israel (`il`) or the Diaspora.
