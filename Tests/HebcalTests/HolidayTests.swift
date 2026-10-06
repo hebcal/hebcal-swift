@@ -59,6 +59,25 @@ struct HolidayTests {
         #expect(ev.hdate.description == "11 Cheshvan 5781")
     }
 
+    @Test func swordsOfIronWarMemorialDay() throws {
+        let desc = "Swords of Iron War Memorial Day"
+        #expect(getHolidaysForYear(year: 5785, il: true).first { $0.desc == desc } == nil)
+        // 24 Tishrei 5787 falls on a Monday, so it is observed on the day itself
+        let ev1 = try #require(getHolidaysForYear(year: 5787, il: true).first { $0.desc == desc })
+        #expect(ev1.hdate.description == "24 Tishrei 5787")
+        #expect(ev1.hdate.dow() == .MON)
+        #expect(ev1.flags == .MODERN_HOLIDAY)
+        #expect(ev1.emoji == "🇮🇱")
+        // also observed in the Diaspora
+        let ev2 = try #require(getHolidaysForYear(year: 5787, il: false).first { $0.desc == desc })
+        #expect(ev2.hdate.description == "24 Tishrei 5787")
+        // 24 Tishrei 5789 falls on Shabbat, so it is postponed to Sunday
+        let ev3 = try #require(getHolidaysForYear(year: 5789, il: true).first { $0.desc == desc })
+        #expect(ev3.hdate.description == "25 Tishrei 5789")
+        #expect(ev3.hdate.dow() == .SUN)
+        #expect(Self.dated([ev3]) == ["2028-10-15 \(desc)"])
+    }
+
     @Test func purimMeshulash() throws {
         let events = getHolidaysForYear(year: 5785, il: false)
         let shushanPurim = try #require(events.first { $0.desc == "Shushan Purim" })

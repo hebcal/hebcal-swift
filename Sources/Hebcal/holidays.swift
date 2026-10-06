@@ -270,6 +270,13 @@ private let staticModernHolidays: [ModernHoliday] = [
                   chul: false,
                   friSatMovetoThu: false,
                   satPostponeToSun: false, friPostponeToSun: false),
+    // https://fs.knesset.gov.il/25/law/25_lsr_14184773.pdf
+    // (Published in Sefer HaChukim No. 3567 on 8 Av 5786 / July 22, 2026)
+    ModernHoliday(h: Holiday(mm: .TISHREI, dd: 24, desc: "Swords of Iron War Memorial Day"),
+                  firstYear: 5786,
+                  chul: true,
+                  friSatMovetoThu: false,
+                  satPostponeToSun: true, friPostponeToSun: false),
 ]
 
 
