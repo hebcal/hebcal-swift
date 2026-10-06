@@ -284,6 +284,7 @@ private let heTranslations = [
     "Jabotinsky Day": "יום ז׳בוטינסקי",
     "Herzl Day": "יום הרצל",
     "Ben-Gurion Day": "יום בן־גוריון",
+    "Swords of Iron War Memorial Day": "יום הזיכרון לחללי מלחמת חרבות ברזל",
 ]
 
 private let parshaNikud = [
