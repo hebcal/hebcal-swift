@@ -44,6 +44,9 @@ private let ashkenaziTranslations = [
     "Ki Tisa": "Ki Sisa",
     "Matot": "Matos",
     "Purim Katan": "Purim Koton",
+    "Shushan Purim Katan": "Shushan Purim Koton",
+    "Birkat Hachamah": "Birkas HaChamah",
+    "Ta'anit BeHaB": "Ta'anis BeHaB",
     "Tevet": "Teves",
     "Shabbat Chazon": "Shabbos Chazon",
     "Shabbat HaChodesh": "Shabbos HaChodesh",
@@ -285,6 +288,12 @@ private let heTranslations = [
     "Herzl Day": "יום הרצל",
     "Ben-Gurion Day": "יום בן־גוריון",
     "Swords of Iron War Memorial Day": "יום הזיכרון לחללי מלחמת חרבות ברזל",
+    "Birkat Hachamah": "ברכת החמה",
+    "Chag HaBanot": "חג הבנות",
+    "Shushan Purim Katan": "שושן פורים קטן",
+    "Ta'anit BeHaB": "תענית בה״ב",
+    "Hebrew Language Day": "יום השפה העברית",
+    "Yom Kippur Katan": "יום כיפור קטן",
 ]
 
 private let parshaNikud = [
