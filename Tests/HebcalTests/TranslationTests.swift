@@ -11,6 +11,12 @@ struct TranslationTests {
         ("Bechukotai", .ashkenazi, "Bechukosai"),
         ("Bechukotai", .he, "בחקתי"),
         ("Bechukotai", .heNikud, "בְּחֻקֹּתַי"),
+        ("Rosh Chodesh Sh'vat", .he, "ראש חודש שבט"),
+        ("Sunset", .he, "שקיעת החמה"),
+        ("Purim Meshulash", .he, "פורים משולש"),
+        ("Rosh Chodesh Sh'vat", .he, "ראש חודש שבט"),
+        ("Sunset", .he, "שקיעת החמה"),
+        ("Purim Meshulash", .heNikud, "פּוּרִים מְשׁוּלָּשׁ"),
         // Apostrophes become typographic in English and Ashkenazi
         ("Sh'vat", .en, "Sh’vat"),
         ("Sh'vat", .ashkenazi, "Sh’vat"),
@@ -31,6 +37,32 @@ struct TranslationTests {
             .map { lookupTranslation(str: $0.desc, lang: .he) }
             .filter { $0.unicodeScalars.contains(where: nikud.contains) }
         #expect(withNikud.isEmpty, "\(withNikud)")
+    }
+
+    @Test(arguments: [
+        (TranslationLang.en, "Yom Kippur Katan Sh’vat", "Yom Kippur Katan"),
+        (.ashkenazi, "Yom Kippur Katan Sh’vat", "Yom Kippur Katan"),
+        (.he, "יום כיפור קטן שבט", "יום כיפור קטן"),
+        (.heNikud, "יוֹם כִּפּוּר קָטָן שבט", "יוֹם כִּפּוּר קָטָן"),
+    ])
+    func yomKippurKatan(lang: TranslationLang, expected: String, brief: String) {
+        let ev = HEvent(hdate: HDate(yy: 5771, mm: .SHVAT, dd: 29),
+                        desc: "Yom Kippur Katan Sh'vat", flags: [.MINOR_FAST, .YOM_KIPPUR_KATAN])
+        #expect(ev.render(lang: lang) == expected)
+        #expect(ev.renderBrief(lang: lang) == brief)
+    }
+
+    @Test(arguments: [
+        (TranslationLang.en, "Rosh Chodesh Sh’vat"),
+        (.ashkenazi, "Rosh Chodesh Sh’vat"),
+        (.he, "ראש חודש שבט"),
+        (.heNikud, "רֹאשׁ חוֹדֶשׁ שבט"),
+    ])
+    func roshChodesh(lang: TranslationLang, expected: String) {
+        let ev = HEvent(hdate: HDate(yy: 5771, mm: .SHVAT, dd: 1),
+                        desc: "Rosh Chodesh Sh'vat", flags: .ROSH_CHODESH)
+        #expect(ev.render(lang: lang) == expected)
+        #expect(ev.renderBrief(lang: lang) == expected)
     }
 
     @Test(arguments: [

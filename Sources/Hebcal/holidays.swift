@@ -56,6 +56,34 @@ public struct HEvent: Comparable, Sendable {
         self.flags = flags ?? .NONE
         self.emoji = emoji
     }
+
+    private static let yomKippurKatan = "Yom Kippur Katan"
+    private static let roshChodesh = "Rosh Chodesh"
+
+    /// The description translated into `lang`, e.g. "יום כיפור קטן שבט".
+    ///
+    /// Yom Kippur Katan and Rosh Chodesh descriptions are composed of the
+    /// holiday name and a month name, which are translated separately.
+    public func render(lang: TranslationLang?) -> String {
+        let language = lang ?? .en
+        let name = flags.contains(.YOM_KIPPUR_KATAN) ? Self.yomKippurKatan
+            : flags.contains(.ROSH_CHODESH) ? Self.roshChodesh : nil
+        if let name, desc.hasPrefix(name + " ") {
+            let monthName = String(desc.dropFirst(name.count + 1))
+            return lookupTranslation(str: name, lang: language) + " " +
+                lookupTranslation(str: monthName, lang: language)
+        }
+        return lookupTranslation(str: desc, lang: language)
+    }
+
+    /// Like ``render(lang:)``, but omits the month for Yom Kippur Katan.
+    public func renderBrief(lang: TranslationLang?) -> String {
+        let language = lang ?? .en
+        if flags.contains(.YOM_KIPPUR_KATAN) {
+            return lookupTranslation(str: Self.yomKippurKatan, lang: language)
+        }
+        return render(lang: lang)
+    }
 }
 
 /// A holiday on a fixed Hebrew date.
